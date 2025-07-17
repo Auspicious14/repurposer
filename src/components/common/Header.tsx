@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
@@ -22,5 +22,3 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
-export default Header;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface OutputTabsProps {
   results: {
@@ -8,8 +8,8 @@ interface OutputTabsProps {
   }[];
 }
 
-const OutputTabs: React.FC<OutputTabsProps> = ({ results }) => {
-  const [activeTab, setActiveTab] = useState(results[0]?.platform || '');
+export const OutputTabs: React.FC<OutputTabsProps> = ({ results }) => {
+  const [activeTab, setActiveTab] = useState(results[0]?.platform || "");
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
   const handleCopy = (text: string) => {
@@ -31,9 +31,11 @@ const OutputTabs: React.FC<OutputTabsProps> = ({ results }) => {
               key={result.platform}
               onClick={() => setActiveTab(result.platform)}
               className={`
-                ${activeTab === result.platform
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}
+                ${
+                  activeTab === result.platform
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }
                 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200
               `}
             >
@@ -43,26 +45,29 @@ const OutputTabs: React.FC<OutputTabsProps> = ({ results }) => {
         </nav>
       </div>
       <div className="mt-6">
-        {results.map((result) => (
-          activeTab === result.platform && (
-            <motion.div
-              key={result.platform}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="bg-gray-50 p-4 rounded-lg shadow-inner"
-            >
-              <p className="text-gray-800 whitespace-pre-wrap">{result.content}</p>
-              <button
-                onClick={() => handleCopy(result.content)}
-                className="mt-4 bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors duration-200"
+        {results.map(
+          (result) =>
+            activeTab === result.platform && (
+              <motion.div
+                key={result.platform}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gray-50 p-4 rounded-lg shadow-inner"
               >
-                Copy to Clipboard
-              </button>
-            </motion.div>
-          )
-        ))}
+                <p className="text-gray-800 whitespace-pre-wrap">
+                  {result.content}
+                </p>
+                <button
+                  onClick={() => handleCopy(result.content)}
+                  className="mt-4 bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition-colors duration-200"
+                >
+                  Copy to Clipboard
+                </button>
+              </motion.div>
+            )
+        )}
       </div>
 
       <AnimatePresence>
@@ -77,10 +82,6 @@ const OutputTabs: React.FC<OutputTabsProps> = ({ results }) => {
           </motion.div>
         )}
       </AnimatePresence>
-            </div>
-          
-     
+    </div>
   );
 };
-
-export default OutputTabs;

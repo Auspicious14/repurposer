@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-
+import { motion } from "framer-motion";
+import { OutputFormatSelector } from "./OutputFormatSelector";
+import ToneSelector from "../ToneSelector";
+import LoadingSpinner from "../loader/LoadingSpinner";
 interface InputFormProps {
   onGenerate: (data: {
     content: string;
@@ -7,11 +10,6 @@ interface InputFormProps {
     tone: string;
   }) => void;
 }
-
-import { motion } from "framer-motion";
-import OutputFormatSelector from "./OutputFormatSelector";
-import ToneSelector from "./ToneSelector";
-import LoadingSpinner from "./LoadingSpinner";
 
 const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
   const [content, setContent] = useState("");

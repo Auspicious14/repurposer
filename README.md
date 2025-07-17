@@ -1,40 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Repurposer Frontend
+
+This is the frontend application for the Repurposer project, built with Next.js and designed to provide a user-friendly interface for generating repurposed content from audio transcripts.
+
+## Features
+
+*   **User Authentication**: Secure login and registration.
+*   **Transcript Input**: Allows users to input audio transcripts.
+*   **Content Generation Options**: Users can specify tone, format (e.g., Twitter, LinkedIn, Blog), and other parameters for content generation.
+*   **Real-time Feedback**: Provides loading indicators and status updates during content generation.
+*   **Display Generated Content**: Presents the generated content (title, keywords, various platform-specific outputs) in an organized manner.
+*   **Responsive UI**: Designed to work across various devices.
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to set up and run the frontend application locally.
+
+### Prerequisites
+
+*   Node.js (LTS version recommended)
+*   npm or yarn
+*   Access to the Repurposer Backend API
+
+### Installation
+
+1.  **Clone the repository (if you haven't already):**
+
+    ```bash
+    git clone <repository-url>
+    cd repurposer
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+### Environment Variables
+
+Create a `.env.local` file in the root of the project and add the following environment variables:
+
+```
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000/api
+```
+
+Replace `http://localhost:5000/api` with the actual URL of your Repurposer Backend API.
+
+### Running the Development Server
+
+To start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```
+repurposer/
+├── public/                 # Static assets (images, fonts)
+├── src/
+│   ├── components/         # Reusable React components
+│   ├── pages/              # Next.js pages and API routes
+│   │   ├── api/            # Backend API routes (if any, for Next.js API)
+│   │   └── index.tsx       # Main application page
+│   └── styles/             # Global styles
+├── .env.local              # Environment variables
+├── next.config.ts          # Next.js configuration
+├── package.json            # Project dependencies and scripts
+├── postcss.config.mjs      # PostCSS configuration
+├── tailwind.config.js      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+└── README.md               # This README file
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*   **Next.js**: React framework for production.
+*   **React**: JavaScript library for building user interfaces.
+*   **TypeScript**: Superset of JavaScript that adds static typing.
+*   **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+*   **Axios**: Promise-based HTTP client for the browser and Node.js.
+*   **React Hook Form**: For flexible and extensible forms.
+*   **Zod**: TypeScript-first schema declaration and validation library.
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions are welcome! Please follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/your-feature-name`).
+3.  Make your changes.
+4.  Commit your changes (`git commit -m 'feat: Add new feature'`).
+5.  Push to the branch (`git push origin feature/your-feature-name`).
+6.  Open a Pull Request.
