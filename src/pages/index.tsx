@@ -1,10 +1,19 @@
 import { Footer, Header, InputForm, ResultsDisplay } from "@/components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const [results, setResults] = useState<
     { content: string; platform: string }[]
   >([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
