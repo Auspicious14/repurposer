@@ -69,10 +69,10 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </div>
-          <div className="flex gap-1 items-center">
-            <p>New User?</p>
-            <Link href={"/signup"}>Sign up</Link>
+            <div className="flex text-sm gap-1 items-center">
+              <p>New User?</p>
+              <Link href={"/signup"}>Sign up</Link>
+            </div>
           </div>
           <div className="flex justify-end">
             <p className="text-right text-sm text-gray-500">
