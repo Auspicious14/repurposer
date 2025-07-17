@@ -1,28 +1,24 @@
-import InputForm from "../components/InputForm";
-import OutputTabs from "../components/OutputTabs";
+import ContentInput from "../components/ContentInput";
+import ResultsDisplay from "../components/ResultsDisplay";
 import { useState } from "react";
+import Header from "../components/Header";
 
 export default function Home() {
   const [generatedContent, setGeneratedContent] = useState<{content: string, platform: string}[]>([]);
 
-  const handleGenerateContent = (data: {
-    content: string;
-    selectedPlatforms: string[];
-    selectedTone: string;
-  }) => {
+  const handleGenerateContent = ({ content, formats, tone }: { content: string; formats: string[]; tone: string }) => {
     // This is a placeholder for actual content generation logic
     // In a real app, you'd send this to a backend API
-    const newResults = data.selectedPlatforms.map((platform) => ({
-      platform: platform,
-      content: `This is a ${
-        data.selectedTone
-      } ${platform} post based on: "${data.content.substring(0, 50)}..."`,
+    const newResults = formats.map((f) => ({
+      platform: f,
+      content: `This is a generated ${f} post for "${content.substring(0, 20)}..." with a ${tone} tone.`,
     }));
     setGeneratedContent(newResults);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+      <Header />
       <div className="max-w-3xl w-full space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-gray-900">
@@ -33,10 +29,10 @@ export default function Home() {
           </p>
         </div>
         <div className="bg-white p-8 rounded-xl shadow-lg">
-          <InputForm onGenerate={handleGenerateContent} />
+          <ContentInput onGenerate={handleGenerateContent} />
           {generatedContent.length > 0 && (
             <div className="mt-8">
-              <OutputTabs results={generatedContent} />
+              <ResultsDisplay results={generatedContent} />
             </div>
           )}
         </div>
