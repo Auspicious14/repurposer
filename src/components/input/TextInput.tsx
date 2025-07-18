@@ -24,8 +24,8 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
 }) => {
   const [field, meta] = ignoreFormik
     ? [props, { touched: false, error: undefined }]
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    : useField(props);
+    : // eslint-disable-next-line react-hooks/rules-of-hooks
+      useField(props);
 
   const baseClasses = `
   w-full
@@ -80,7 +80,8 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...(ignoreFormik ? props : field)}
             {...props}
             type={type}
-            className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200${className}`}
+            className={inputClasses}
+            // className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200${className}`}
             aria-describedby={helperText ? `${props.id}-helper` : undefined}
           />
         ) : (
@@ -88,7 +89,8 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...(ignoreFormik ? props : field)}
             {...props}
             rows={props.rows || 4}
-            className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200 ${className} `}
+            className={textareaClasses}
+            // className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200 ${className} `}
             aria-describedby={helperText ? `${props.id}-helper` : undefined}
           />
         )}

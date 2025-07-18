@@ -4,20 +4,30 @@ import api from "../lib/api";
 import Link from "next/link";
 import LoadingSpinner from "@/components/loader/LoadingSpinner";
 import { toast } from "sonner";
+import { Formik } from "formik";
+import { TextInput } from "@/components/input/TextInput";
+import * as Yup from "yup";
+
+const FormSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 const RegisterPage: React.FC = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: any) => {
+    const { firstName, lastName, email, password } = values;
     setError("");
     setMessage("");
     setLoading(true);
@@ -31,10 +41,6 @@ const RegisterPage: React.FC = () => {
       });
       if (response.data?.success) {
         toast.success("🎉 Registration successful! You can now log in.");
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPassword("");
         router.push("/login");
       }
     } catch (err: unknown) {
@@ -51,71 +57,71 @@ const RegisterPage: React.FC = () => {
         <h2 className="text-3xl font-bold text-center text-blue-700">
           Create Your Account
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex gap-4 flex-col sm:flex-row">
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+          }}
+          validationSchema={FormSchema}
+          onSubmit={handleSubmit}
+        >
+          <form className="space-y-5">
+            <div className="flex gap-4 flex-col sm:flex-row">
+              <div className="w-full">
+                <TextInput
+                  label="First Name"
+                  name="firstName"
+                  placeholder="John"
+                  type="text"
+                  required
+                />
+              </div>
+              <div className="w-full">
+                <TextInput
+                  label="Last Name"
+                  name="lastName"
+                  placeholder="Doe"
+                  type="text"
+                  required
+                />
+              </div>
             </div>
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
+            <TextInput
+              label="Email"
+              name="email"
+              placeholder="example@example.com"
               type="email"
-              className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
+            <TextInput
+              label="Password"
+              name="password"
+              placeholder="Password"
               type="password"
-              className="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </div>
+            {/* {error && <p className="text-red-600 text-sm mt-2">{error}</p>} */}
+            {/* {message && <p className="text-green-600 text-sm mt-2">{message}</p>} */}
 
-          {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
-          {message && <p className="text-green-600 text-sm mt-2">{message}</p>}
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? <LoadingSpinner /> : "Sign Up"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition disabled:opacity-50"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                "Sign Up"
+              )}
+            </button>
+          </form>
+        </Formik>
 
         <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}

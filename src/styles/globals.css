@@ -34,6 +34,7 @@ h1,
 h2,
 div,
 textarea,
-input {
+input,
+label {
   color: var(--background);
 }
