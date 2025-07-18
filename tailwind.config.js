@@ -8,6 +8,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: "var(--primary)",
+        secondary: "var(--secondary)",
+        accent: "var(--accent)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -15,5 +22,5 @@ module.exports = {
       },
     },
   },
-  plugins: ["@tailwindcss/forms"],
+  plugins: [],
 };
