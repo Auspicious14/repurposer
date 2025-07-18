@@ -38,20 +38,20 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
   duration-300
   ease-in-out
   focus:ring-2
-  focus:ring-primary-500/20
-  focus:border-primary-500
-  dark:focus:ring-primary-400/20
-  dark:focus:border-primary-400
+  focus:ring-primary/20
+  focus:border-primary
+  dark:focus:ring-primary/20
+  dark:focus:border-primary
   outline-none
   ${
     meta.error
       ? "border-red-500 dark:border-red-400"
-      : "border-gray-300 dark:border-dark-border"
+      : "border-gray-300 dark:border-secondary"
   }
   ${
     props.disabled
       ? "bg-gray-100 dark:bg-gray-800 cursor-not-allowed"
-      : "hover:border-gray-400 dark:hover:border-gray-500"
+      : "hover:border-gray-400 dark:hover:border-secondary"
   }
   ${className}
 `;
@@ -81,7 +81,7 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...props}
             type={type}
             className={inputClasses}
-            // className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200${className}`}
+            // className={`block w-full rounded-md border-gray-300 dark:border-secondary shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary dark:bg-background dark:text-foreground${className}`}
             aria-describedby={helperText ? `${props.id}-helper` : undefined}
           />
         ) : (
@@ -90,7 +90,7 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...props}
             rows={props.rows || 4}
             className={textareaClasses}
-            // className={`block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary-400 dark:bg-gray-700 dark:text-gray-200 ${className} `}
+            // className={`block w-full rounded-md border-gray-300 dark:border-secondary shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary dark:bg-background dark:text-foreground ${className} `}
             aria-describedby={helperText ? `${props.id}-helper` : undefined}
           />
         )}
@@ -107,7 +107,7 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
         </div>
       ) : (
         helperText && (
-          <div className="flex items-start gap-1.5 text-sm text-gray-500 dark:text-gray-300">
+          <div className="flex items-start gap-1.5 text-sm text-secondary dark:text-secondary">
             <InformationCircleIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <span id={`${props.id}-helper`}>{helperText}</span>
           </div>
