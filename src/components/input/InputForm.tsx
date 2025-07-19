@@ -25,7 +25,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
     setLoading(true);
     try {
       const res = await api.post("/transcribe", {
-        content: values.content, // Changed from transcript to match form
+        transcript: values.content, // Changed from transcript to match form
         platforms: values.formats,
         tone: values.tone,
       });
