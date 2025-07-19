@@ -36,8 +36,8 @@ const LoginPage: React.FC = () => {
     try {
       const response = await api.post("/auth/login", values);
       console.log("API Response:", response); // Debug log
-      if (response.status === 200 && response.data?.token) {
-        localStorage.setItem("token", response.data.token);
+      if (response.status === 200 && response.data?.data?.token) {
+        localStorage.setItem("token", response.data.data.token);
         toast.success("🎉 Welcome back!");
         router.push("/dashboard");
       } else {
