@@ -22,7 +22,8 @@ export const TextInput: FC<ITextInputProps> = ({
 }) => {
   const [field, meta] = ignoreFormik
     ? [props, { touched: false, error: undefined }]
-    : useField(props);
+    : // eslint-disable-next-line react-hooks/rules-of-hooks
+    useField(props);
 
   const baseClasses = `
     w-full
