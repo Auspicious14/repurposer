@@ -4,7 +4,7 @@
 @plugin "@tailwindcss/forms";
 @import url("https://fonts.googleapis.com/css2?family=OpenSans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
 
-::root {
+:root {
   --primary: #4f46e5; /* Vibrant indigo for buttons, accents */
   --secondary: #ec4899; /* Bright pink for highlights, CTAs */
   --background: #f5f5f4; /* Soft off-white for light mode */
