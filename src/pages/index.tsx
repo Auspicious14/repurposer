@@ -1,54 +1,68 @@
-
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { Header, Footer } from "@/components";
 
-export default function LandingPage() {
+export default function Landing() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router]);
+
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col items-center justify-center px-4">
-      <header className="text-center max-w-3xl mx-auto mb-12">
-        <h1 className="text-4xl sm:text-5xl font-bold text-[var(--primary)] mb-4">
-          Turn Your Ideas into Social Media Magic with forma
+    <div className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--text-primary)]">
+      <Header />
+      <section className="container flex flex-col items-center justify-center text-center py-16 md:py-24">
+        <h1 className="text-4xl md:text-5xl font-bold text-[var(--primary)] mb-6 animate-fade-in">
+          Turn Your Ideas into Perfect Social Posts
         </h1>
-        <p className="text-lg sm:text-xl text-[var(--text-secondary)] mb-8">
-          Transform long texts into polished Twitter threads, LinkedIn posts, and more in seconds. Create, share, and shine.
+        <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mb-8">
+          forma helps creators craft engaging Twitter threads, LinkedIn posts, and more in seconds. Simplify your workflow and shine online.
         </p>
-        <div className="flex gap-4 justify-center">
-          <Link href="/signup" className="btn px-6 py-3 text-lg transition-all duration-300 hover:scale-105">
+        <div className="flex gap-4">
+          <Link href="/register" className="btn px-8 py-3 text-lg hover:scale-105 transition-all duration-300">
             Get Started
           </Link>
-          <Link href="#features" className="btn-secondary px-6 py-3 text-lg transition-all duration-300 hover:scale-105">
+          <Link href="#features" className="btn-secondary px-8 py-3 text-lg hover:scale-105 transition-all duration-300">
             Learn More
           </Link>
         </div>
-      </header>
-
-      <section id="features" className="container py-12">
-        <h2 className="text-3xl font-semibold text-center text-[var(--primary)] mb-8">Why forma?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card p-6 text-center animate-fade-in">
-            <h3 className="text-xl font-medium text-[var(--text-primary)] mb-2">Effortless Formatting</h3>
-            <p className="text-[var(--text-secondary)]">Paste your text and let forma craft perfect posts for any platform.</p>
+      </section>
+      <section id="features" className="container py-16">
+        <h2 className="text-3xl font-bold text-center text-[var(--text-primary)] mb-12">Why Choose forma?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="card p-6 animate-fade-in">
+            <h3 className="text-xl font-semibold text-[var(--primary)] mb-4">Fast Formatting</h3>
+            <p className="text-[var(--text-secondary)]">Turn long texts into platform-ready posts with one click.</p>
           </div>
-          <div className="card p-6 text-center animate-fade-in">
-            <h3 className="text-xl font-medium text-[var(--text-primary)] mb-2">Real-Time Previews</h3>
-            <p className="text-[var(--text-secondary)]">See your posts come to life instantly, tailored to Twitter, LinkedIn, and more.</p>
+          <div className="card p-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h3 className="text-xl font-semibold text-[var(--primary)] mb-4">Live Previews</h3>
+            <p className="text-[var(--text-secondary)]">See exactly how your post will look before publishing.</p>
           </div>
-          <div className="card p-6 text-center animate-fade-in">
-            <h3 className="text-xl font-medium text-[var(--text-primary)] mb-2">Community & Templates</h3>
-            <p className="text-[var(--text-secondary)]">Join creators, share posts, and use trending templates to stay ahead.</p>
+          <div className="card p-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <h3 className="text-xl font-semibold text-[var(--primary)] mb-4">Multi-Platform</h3>
+            <p className="text-[var(--text-secondary)]">Craft content for Twitter, LinkedIn, and more, effortlessly.</p>
           </div>
         </div>
       </section>
-
-      <section className="container py-12 text-center">
-        <h2 className="text-3xl font-semibold text-[var(--primary)] mb-4">Ready to Create?</h2>
-        <p className="text-lg text-[var(--text-secondary)] mb-6">Join thousands of creators turning ideas into impact.</p>
-        <Link href="/signup" className="btn px-6 py-3 text-lg inline-flex items-center gap-2 transition-all duration-300 hover:scale-105">
-          Start Now <ArrowRightIcon className="h-5 w-5" />
-        </Link>
+      <section className="bg-[var(--primary)] text-white py-16 text-center">
+        <div className="container">
+          <h2 className="text-3xl font-bold mb-6">Ready to Create with forma?</h2>
+          <p className="text-lg mb-8 max-w-xl mx-auto">
+            Join thousands of creators simplifying their social media game.
+          </p>
+          <Link href="/register" className="btn-secondary px-8 py-3 text-lg hover:scale-105 transition-all duration-300">
+            Sign Up Now
+          </Link>
+        </div>
       </section>
+      <Footer />
     </div>
   );
 }
