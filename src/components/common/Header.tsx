@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 bg-[var(--card-bg)] shadow-sm py-4 px-6 flex justify-between items-center">
       <h1 className="text-2xl font-bold text-[var(--text-primary)]">forma</h1>
-      <nav className="hidden md:flex items-center gap-6 text-[var(--text-primary)]">
+      <nav className="hidden md:flex items-center gap-6 text-[var(--text-secondary)]">
         <a href="/dashboard" className="hover:text-[var(--primary)]">Dashboard</a>
         <a href="/templates" className="hover:text-[var(--primary)]">Templates</a>
         <a href="/community" className="hover:text-[var(--primary)]">Community</a>
@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-4">
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+          className="p-2 rounded-full hover:bg-[var(--background)]"
           aria-label="Toggle dark mode"
         >
           {darkMode ? '☀️' : '🌙'}
