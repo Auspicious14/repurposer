@@ -1,12 +1,10 @@
-import { useField } from "formik";
-import React, { InputHTMLAttributes, FC } from "react";
-import {
-  ExclamationCircleIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/24/outline";
+"use client";
 
-interface ITextInputProps
-  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+import { useField } from "formik";
+import React, { FC, InputHTMLAttributes } from "react";
+import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+
+interface ITextInputProps extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label: string;
   name: string;
   helperText?: string;
@@ -14,9 +12,9 @@ interface ITextInputProps
   ignoreFormik?: boolean;
 }
 
-export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
+export const TextInput: FC<ITextInputProps> = ({
   label,
-  className,
+  className = "",
   helperText,
   type = "text",
   ignoreFormik = false,
@@ -24,52 +22,36 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
 }) => {
   const [field, meta] = ignoreFormik
     ? [props, { touched: false, error: undefined }]
-    : // eslint-disable-next-line react-hooks/rules-of-hooks
-      useField(props);
+    : useField(props);
 
   const baseClasses = `
-  w-full
-  px-4
-  rounded-md
-  border
-  bg-white
-  dark:bg-dark-card
-  transition-all
-  duration-300
-  ease-in-out
-  focus:ring-2
-  focus:ring-primary/20
-  focus:border-primary
-  dark:focus:ring-primary/20
-  dark:focus:border-primary
-  outline-none
-  ${
-    meta.error
-      ? "border-red-500 dark:border-red-400"
-      : "border-gray-300 dark:border-secondary"
-  }
-  ${
-    props.disabled
-      ? "bg-gray-100 dark:bg-gray-800 cursor-not-allowed"
-      : "hover:border-gray-400 dark:hover:border-secondary"
-  }
-  ${className}
-`;
+    w-full
+    px-4
+    rounded-md
+    border
+    bg-[var(--card-bg)]
+    text-[var(--text-primary)]
+    transition-all
+    duration-300
+    ease-in-out
+    focus:ring-2
+    focus:ring-[var(--primary)]/20
+    focus:border-[var(--primary)]
+    outline-none
+    ${meta.error ? "border-red-500" : "border-[var(--text-secondary)]"}
+    ${props.disabled ? "bg-gray-100 dark:bg-gray-800 cursor-not-allowed" : "hover:border-[var(--primary)]"}
+    ${className}
+  `;
 
-  const inputClasses = `${baseClasses} py-2.5 pr-10`;
-  const textareaClasses = `${baseClasses} py-2 min-h-[120px]`.replace(
-    "pr-10",
-    ""
-  );
+  const inputClasses = `${baseClasses} py-2.5 pr-10 text-sm`;
+  const textareaClasses = `${baseClasses} py-2 min-h-[120px] resize-y text-sm`;
+
   return (
     <div className="space-y-2">
       <label
+        htmlFor={props.id || props.name}
         className={`block text-sm font-medium mb-1 transition-colors
-          ${
-            meta.error
-              ? "text-red-600 dark:text-red-400"
-              : "text-gray-700 dark:text-gray-200"
-          }
+          ${meta.error ? "text-red-600" : "text-[var(--text-primary)]"}
         `}
       >
         {label}
@@ -81,8 +63,8 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...props}
             type={type}
             className={inputClasses}
-            // className={`block w-full rounded-md border-gray-300 dark:border-secondary shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary dark:bg-background dark:text-foreground${className}`}
-            aria-describedby={helperText ? `${props.id}-helper` : undefined}
+            aria-invalid={meta.touched && meta.error ? "true" : "false"}
+            aria-describedby={meta.error ? `${props.name}-error` : helperText ? `${props.name}-helper` : undefined}
           />
         ) : (
           <textarea
@@ -90,26 +72,26 @@ export const TextInput: FC<ITextInputProps & { ignoreFormik?: boolean }> = ({
             {...props}
             rows={props.rows || 4}
             className={textareaClasses}
-            // className={`block w-full rounded-md border-gray-300 dark:border-secondary shadow-sm focus:border-primary focus:ring-primary dark:focus:border-primary dark:bg-background dark:text-foreground ${className} `}
-            aria-describedby={helperText ? `${props.id}-helper` : undefined}
+            aria-invalid={meta.touched && meta.error ? "true" : "false"}
+            aria-describedby={meta.error ? `${props.name}-error` : helperText ? `${props.name}-helper` : undefined}
           />
         )}
         {meta.touched && meta.error && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <ExclamationCircleIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
           </div>
         )}
       </div>
       {meta.touched && meta.error ? (
-        <div className="flex items-start gap-1.5 text-sm text-red-600 dark:text-red-400">
+        <div id={`${props.name}-error`} className="flex items-start gap-1.5 text-sm text-red-600">
           <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
           <span>{meta.error}</span>
         </div>
       ) : (
         helperText && (
-          <div className="flex items-start gap-1.5 text-sm text-secondary dark:text-secondary">
+          <div id={`${props.name}-helper`} className="flex items-start gap-1.5 text-sm text-[var(--text-secondary)]">
             <InformationCircleIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
-            <span id={`${props.id}-helper`}>{helperText}</span>
+            <span>{helperText}</span>
           </div>
         )
       )}
