@@ -62,7 +62,7 @@ const RegisterPage: React.FC = () => {
           validationSchema={FormSchema}
           onSubmit={handleSubmit}
         >
-          <form className="space-y-5">
+          <div className="space-y-5">
             <div className="flex flex-col sm:flex-row gap-4">
               <TextInput name="firstName" label="First Name" required />
               <TextInput name="lastName" label="Last Name" required />
@@ -85,7 +85,7 @@ const RegisterPage: React.FC = () => {
             >
               {loading ? <LoadingSpinner /> : "Sign Up"}
             </button>
-          </form>
+      </div>>
         </Formik>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-300">
