@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import LoadingSpinner from "../loader/LoadingSpinner";
 import { OutputFormatSelector } from "./OutputFormatSelector";
 import { TextInput } from "./TextInput";
+import ToneSelector from "../ToneSelector"
 
 const FormSchema = Yup.object().shape({
   content: Yup.string().required("Content is required"),
