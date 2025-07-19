@@ -51,7 +51,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue, errors, touched }) => (
-        <Form className="space-y-6" disabled={loading}>
+        <Form className="space-y-6">
           <p className="text-[var(--text-secondary)] mb-2">Paste your long-form content here to repurpose across platforms!</p>
           <TextInput
             label="Content"
