@@ -22,29 +22,24 @@
   --text-secondary: #9ca3af; /* Lighter gray for dark mode */
 }
 
-/* Base styles */
 body {
   @apply bg-[var(--background)] text-[var(--text-primary)];
   margin: 0;
-  font-family: "Open Sans sans-serif"
+  font-family: "Open Sans sans-serif";
 }
 
-/* Card styles for panels */
 .card {
   @apply bg-[var(--card-bg)] rounded-lg shadow-md p-6;
 }
 
-/* Button styles */
 .btn {
   @apply px-4 py-2 rounded-md font-medium text-white bg-[var(--primary)] hover:bg-indigo-700 transition-colors;
 }
 
-/* Secondary button for variety */
 .btn-secondary {
   @apply px-4 py-2 rounded-md font-medium text-white bg-[var(--secondary)] hover:bg-pink-600 transition-colors;
 }
 
-/* Container for main content */
 .container {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
