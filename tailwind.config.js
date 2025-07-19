@@ -9,11 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--primary)",
-        secondary: "var(--secondary)",
-        accent: "var(--accent)",
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: 'var(--primary)',
+        background: 'var(--background)',
+        card: 'var(--card-bg)',
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -22,5 +20,6 @@ module.exports = {
       },
     },
   },
+  darkMode: 'class',
   plugins: [],
 };
