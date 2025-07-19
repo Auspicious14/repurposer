@@ -46,11 +46,9 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
-      <div className="w-full max-w-lg bg-white dark:bg-[var(--foreground)] rounded-2xl shadow-xl p-8 space-y-6">
-        <h2 className="text-3xl font-bold text-center text-[var(--primary)]">
-          Create Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 text-foreground font-sans">
+      <div className="w-full max-w-xl rounded-2xl shadow-2xl bg-white dark:bg-[#0d0d0d] p-10">
+        <h2 className="text-4xl font-bold mb-6 text-center text-blue-600">Create Account</h2>
 
         <Formik
           initialValues={{
@@ -62,37 +60,30 @@ const RegisterPage: React.FC = () => {
           validationSchema={FormSchema}
           onSubmit={handleSubmit}
         >
-          <div className="space-y-5">
-            <div className="flex flex-col sm:flex-row gap-4">
+          <form className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <TextInput name="firstName" label="First Name" required />
               <TextInput name="lastName" label="Last Name" required />
             </div>
 
             <TextInput name="email" label="Email" type="email" required />
-            <TextInput
-              name="password"
-              label="Password"
-              type="password"
-              required
-            />
+            <TextInput name="password" label="Password" type="password" required />
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[var(--primary)] hover:bg-blue-700 text-white rounded-xl font-semibold transition"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all duration-300"
             >
               {loading ? <LoadingSpinner /> : "Sign Up"}
             </button>
-      </div>>
+          </form>
         </Formik>
 
-        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
-          Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Log in here
-          </Link>
+        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?{' '}
+          <Link href="/login" className="text-blue-500 hover:underline">Log in here</Link>
         </p>
       </div>
     </div>
