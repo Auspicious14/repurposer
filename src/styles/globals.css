@@ -24,8 +24,9 @@
 
 /* Base styles */
 body {
-  @apply bg-[var(--background)] text-[var(--text-primary)] font-sans;
+  @apply bg-[var(--background)] text-[var(--text-primary)];
   margin: 0;
+  font-family: "Open Sans sans-serif"
 }
 
 /* Card styles for panels */
