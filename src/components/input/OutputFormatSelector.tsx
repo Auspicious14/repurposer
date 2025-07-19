@@ -22,8 +22,8 @@ export const OutputFormatSelector: React.FC<OutputFormatSelectorProps> = ({
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
             ${
               selectedFormats.includes(format)
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                ? "bg-[var(--primary)] text-white shadow-md"
+                : "bg-[var(--card-bg)] text-[var(--text-secondary)] hover:bg-[var(--primary)]/10"
             }
           `}
           whileHover={{ scale: 1.05 }}
