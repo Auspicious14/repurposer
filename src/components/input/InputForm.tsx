@@ -46,7 +46,7 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
 
   return (
     <Formik
-      initialValues={{ content: "", formats: [], tone: "Professional" }} // Removed hardcoded LinkedIn
+      initialValues={{ content: "", formats: ["Twitter"], tone: "Professional" }} // Removed hardcoded LinkedIn
       validationSchema={FormSchema}
       onSubmit={handleSubmit}
     >
