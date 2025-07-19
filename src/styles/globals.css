@@ -5,24 +5,43 @@
 @import url("https://fonts.googleapis.com/css2?family=OpenSans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #1e3a8a; /* example */
-  --secondary: #64748b;
-  --accent: #f59e0b;
+  --primary: #2563eb; /* Tailwind's blue-600 for buttons, accents */
+  --background: #f4f7fa; /* Light background */
+  --card-bg: #ffffff; /* White cards for panels */
+  --text-primary: #1f2937; /* Dark text */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --primary: #3b82f6; /* Lighter blue for dark mode */
+  --background: #1f2937; /* Dark background */
+  --card-bg: #374151; /* Dark cards */
+  --text-primary: #f3f4f6; /* Light text */
 }
 
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Open Sans", Helvetica, sans-serif;
+  @apply bg-[var(--background)] text-[var(--text-primary)] font-sans;
+  margin: 0;
+}
+
+/* Smooth transitions for dark mode */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Card styles for panels (e.g., input, preview) */
+.card {
+  @apply bg-[var(--card-bg)] rounded-lg shadow-md p-6;
+}
+
+/* Button styles */
+.btn {
+  @apply px-4 py-2 rounded-md font-medium text-white bg-[var(--primary)] hover:bg-blue-700 transition-colors;
+}
+
+/* Container for main content */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
 p,
