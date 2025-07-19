@@ -34,16 +34,21 @@ const LoginPage: React.FC = () => {
     setError("");
 
     try {
-      const response = await api.post("/auth/login", { email, password });
-      if (response?.data?.token) {
+      const response = await api.post("/auth/login", values);
+      console.log("API Response:", response); // Debug log
+      if (response.status === 200 && response.data?.token) {
         localStorage.setItem("token", response.data.token);
         toast.success("🎉 Welcome back!");
-        router.push("/");
+        router.push("/dashboard");
       } else {
-        throw new Error("No token received");
+        throw new Error("Invalid response: No token found");
       }
     } catch (err: unknown) {
-      const message = (err as any)?.response?.data?.message || "Login failed. Try again.";
+      console.error("Login Error:", err); // Debug log
+      const message =
+        (err as any)?.response?.data?.message ||
+        (err as Error)?.message ||
+        "Login failed. Please check your credentials.";
       setError(message);
       toast.error(message);
     } finally {
