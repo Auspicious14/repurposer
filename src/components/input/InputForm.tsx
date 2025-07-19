@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import api from "@/lib/api";
+import { toast } from "sonner";
 import LoadingSpinner from "../loader/LoadingSpinner";
-import ToneSelector from "../ToneSelector";
 import { OutputFormatSelector } from "./OutputFormatSelector";
 import { TextInput } from "./TextInput";
 
@@ -20,30 +20,24 @@ interface InputFormProps {
 export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (values: {
-    content: string;
-    formats: string[];
-    tone: string;
-  }) => {
+  const handleSubmit = async (values: { content: string; formats: string[]; tone: string }) => {
     setLoading(true);
-
     try {
       const res = await api.post("/transcribe", {
-        transcript: values.content,
+        content: values.content, // Changed from transcript to match form
         platforms: values.formats,
         tone: values.tone,
       });
-      console.log({ results: res.data?.data });
-      const results = (res.data?.data || []).map((item: any) => ({
+      console.log("API Response:", res.data);
+      const results = (res.data?.data || []).map((item: { format: string; content?: string }) => ({
         platform: item.format,
-        content:
-          item.content || `This is a ${values.tone} ${item.format} version.`,
+        content: item.content || `This is a ${values.tone} ${item.format} version.`,
       }));
-
       onGenerate(results);
+      toast.success("Content generated successfully!");
     } catch (err: unknown) {
       console.error("Submission error:", err);
-      // Optionally show toast here
+      toast.error((err as any)?.response?.data?.message || "Failed to generate content.");
     } finally {
       setLoading(false);
     }
@@ -51,52 +45,39 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
 
   return (
     <Formik
-      initialValues={{
-        content: "",
-        formats: ["LinkedIn"],
-        tone: "Professional",
-      }}
+      initialValues={{ content: "", formats: [], tone: "Professional" }} // Removed hardcoded LinkedIn
       validationSchema={FormSchema}
       onSubmit={handleSubmit}
     >
       {({ values, setFieldValue, errors, touched }) => (
-        <Form className="space-y-6">
+        <Form className="space-y-6" disabled={loading}>
+          <p className="text-[var(--text-secondary)] mb-2">Paste your long-form content here to repurpose across platforms!</p>
           <TextInput
             label="Content"
             name="content"
             type="textarea"
             rows={8}
             placeholder="Paste your long-form content here..."
-            className="w-full border border-gray-300 p-4 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-[var(--text-secondary)] p-4 rounded-lg focus:ring-[var(--primary)] focus:border-[var(--primary)]"
             required
           />
-
           <div>
-            <h2 className="text-lg font-medium text-gray-800">
-              Choose output format
-            </h2>
+            <h2 className="text-lg font-medium text-[var(--text-primary)]">Choose Output Formats</h2>
+            <p className="text-sm text-[var(--text-secondary)]">({values.formats.length}/4 selected)</p>
             <OutputFormatSelector
               selectedFormats={values.formats}
-              onSelectFormat={(f) => {
-                const next = values.formats.includes(f)
-                  ? values.formats.filter((x) => x !== f)
-                  : [...values.formats, f];
-                setFieldValue("formats", next);
-              }}
+              onSelectFormat={(f) => setFieldValue("formats", values.formats.includes(f) ? values.formats.filter((x) => x !== f) : [...values.formats, f])}
             />
-            {touched.formats && errors.formats && (
-              <p className="text-red-500 text-sm">{errors.formats}</p>
-            )}
+            {touched.formats && errors.formats && <p className="text-red-500 text-sm">{errors.formats}</p>}
           </div>
-
-          <ToneSelector
-            selectedTone={values.tone}
-            onSelectTone={(t) => setFieldValue("tone", t)}
-          />
-
+          {/* Assuming ToneSelector exists */}
+          <div>
+            <h2 className="text-lg font-medium text-[var(--text-primary)]">Select Tone</h2>
+            <ToneSelector selectedTone={values.tone} onSelectTone={(t) => setFieldValue("tone", t)} />
+          </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-[var(--primary)] text-white py-2 rounded-md hover:bg-indigo-700 transition disabled:opacity-50"
             disabled={loading}
           >
             {loading ? (
