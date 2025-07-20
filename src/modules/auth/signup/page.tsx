@@ -16,7 +16,7 @@ const FormSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .max(20, "Password must be at most 20 characters")
-    .required("Password is required"),
+    .required("Password is required")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
       "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character"
@@ -177,7 +177,7 @@ export const SignUpPage: React.FC = () => {
                   )}
                 </button>
               </div>
-              {/* <PasswordCheck password={values.confirmPassword} /> */}
+              <PasswordCheck password={values.confirmPassword} />
 
               <button
                 type="submit"
