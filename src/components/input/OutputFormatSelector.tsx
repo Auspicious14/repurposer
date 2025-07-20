@@ -6,7 +6,7 @@ interface OutputFormatSelectorProps {
   onSelectFormat: (format: string) => void;
 }
 
-const formats = ["Twitter", "LinkedIn", "Blog Summary", "Instagram Caption"];
+const formats = ["Twitter", "LinkedIn", "Blog Summary", "Instagram Caption", "Whatsapp", "Threads"];
 
 export const OutputFormatSelector: React.FC<OutputFormatSelectorProps> = ({
   selectedFormats,
