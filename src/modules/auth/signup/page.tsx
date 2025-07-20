@@ -72,7 +72,7 @@ export const SignUpPage: React.FC = () => {
                 <TextInput
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   aria-required="true"
                 />
@@ -125,7 +125,7 @@ export const SignUpPage: React.FC = () => {
                 <TextInput
                   name="confirmPassword"
                   label="Confirm Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   aria-required="true"
                 />
@@ -173,7 +173,7 @@ export const SignUpPage: React.FC = () => {
                   )}
                 </button>
               </div>
-              <PasswordCheck password={values.confirmPassword} />
+              {/* <PasswordCheck password={values.confirmPassword} /> */}
 
               <button
                 type="submit"
