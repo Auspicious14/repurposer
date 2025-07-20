@@ -186,7 +186,9 @@ export const SignUpPage: React.FC = () => {
                 aria-label="Sign up"
               >
                 {isLoading ? (
-                  <LoadingSpinner className="flex justify-center items-center text-[var(--text-primary)]" />
+                  <div className="flex justify-center items-center">
+                    <LoadingSpinner className="text-white" />
+                  </div>
                 ) : (
                   "Sign Up"
                 )}

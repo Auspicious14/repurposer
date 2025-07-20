@@ -116,7 +116,13 @@ export const LoginPage: React.FC = () => {
                 className="btn w-full py-3 transition-all duration-300 hover:scale-105 disabled:opacity-50"
                 aria-label="Log in"
               >
-                {isLoading ? <LoadingSpinner className="" /> : "Sign In"}
+                {isLoading ? (
+                  <div className="flex justify-center items-center">
+                    <LoadingSpinner className="text-white" />
+                  </div>
+                ) : (
+                  "Sign In"
+                )}
               </button>
               <Link
                 href="/signup"

@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface OutputCardProps {
   platform: string;
@@ -17,7 +17,9 @@ const OutputCard: React.FC<OutputCardProps> = ({
   return (
     <div className="bg-gray-50 p-4 rounded-lg shadow-inner relative">
       <h3 className="text-lg font-semibold text-gray-800 mb-2">{platform}</h3>
-      <p className="text-gray-700 whitespace-pre-wrap text-sm mb-4">{content}</p>
+      <p className="text-gray-700 whitespace-pre-wrap text-sm mb-4">
+        {content}
+      </p>
       <button
         onClick={() => onCopy(content)}
         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-sm"
