@@ -29,9 +29,7 @@ export default function RootLayout({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div
-      className={`${poppins.variable} ${openSans.variable} ${montserrat.variable}`}
-    >
+    <div className={`${poppins.variable} ${openSans.variable} ${montserrat.variable}`} >
       
       <Header />
 
