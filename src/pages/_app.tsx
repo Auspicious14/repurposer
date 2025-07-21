@@ -7,7 +7,7 @@ import RootLayout from "@/modules/layout"
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AppContextProvider>
-      <RootLayout
+      <RootLayout>
         <ThemeProvider attribute="class">
         <Component {...pageProps} />
       </ThemeProvider>
