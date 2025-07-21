@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import LogoutButton from "../LogoutButton";
 import Link from "next/link";
 import { ThemeState } from "@/context/theme";
+import { useAuth } from "@/modules/auth/context";
 
 export const Header: React.FC = () => {
   const { theme, toggleTheme } = ThemeState();
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const { isLoggedIn } = useAuth();
   return (
     <header className="sticky top-0 z-50 bg-[var(--card-bg)] shadow-sm py-4 px-6 flex justify-between items-center">
       <h1 className="text-2xl font-bold text-[var(--text-primary)]">Forma</h1>

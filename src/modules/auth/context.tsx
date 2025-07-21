@@ -3,27 +3,31 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { FormikHelpers } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { setCookie } from "@/helper";
+import { deleteCookie, setCookie } from "@/helper";
 import api from "@/lib/api";
 
 export interface AuthContextType {
   user: any;
   isLoading: boolean;
+  isLoggedIn: boolean;
   error: string | null;
   authStatus: string | null;
   signUp: (values: any, actions: FormikHelpers<any>) => Promise<void>;
   signIn: (values: any, actions: FormikHelpers<any>) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   authStatus: null,
   isLoading: false,
+  isLoggedIn: false,
   error: null,
   signUp: async () => {},
   signIn: async () => {},
   forgotPassword: async () => {},
+  logout: () => {},
 });
 
 export const AuthContextProvider = ({
@@ -36,6 +40,7 @@ export const AuthContextProvider = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authStatus, setAuthStatus] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleAuthRequest = async (
     url: string,
@@ -50,7 +55,6 @@ export const AuthContextProvider = ({
         if (type === "signin") {
           localStorage.setItem("token", response.data?.data?.token);
           setCookie("token", response.data?.data?.token, 7);
-          setUser(response.data?.data);
           toast.success("🎉 Welcome back!");
           router.push("/dashboard");
         } else {
@@ -94,16 +98,26 @@ export const AuthContextProvider = ({
     }
   }, []);
 
+  const logout = () => {
+    if (!isLoggedIn) return;
+    deleteCookie("token", 7);
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         authStatus,
         user,
         isLoading,
+        isLoggedIn,
         error,
         signUp,
         signIn,
         forgotPassword,
+        logout,
       }}
     >
       {children}

@@ -1,8 +1,6 @@
-
-// // components/OutputCard.tsx (partial update)
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ShareButtons from './ShareButtons';
+import ShareButtons from "./ShareButton";
 
 interface OutputCardProps {
   platform: string;
@@ -23,8 +21,21 @@ const OutputCard: React.FC<OutputCardProps> = ({
   const maxLength = 200;
 
   const shouldTruncate = content.length > maxLength && !isExpanded;
-  const displayContent = shouldTruncate ? `${content.slice(0, maxLength)}...` : content;
+  const displayContent = shouldTruncate
+    ? `${content.slice(0, maxLength)}...`
+    : content;
 
+  const currentContent = isEditing ? editContent : displayContent;
+
+  const handleDownload = () => {
+    const blob = new Blob([editContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${platform}_output.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   const formattedContent = () => {
     if (platform === "Twitter/X (Thread)") {
       const tweets = editContent.split("\n").filter((t) => t.trim());
@@ -45,12 +56,14 @@ const OutputCard: React.FC<OutputCardProps> = ({
         </p>
       ));
     }
-    return <p className="text-sm whitespace-pre-wrap">{editContent}</p>;
+    return <p className="text-sm whitespace-pre-wrap">{currentContent}</p>;
   };
 
   return (
     <div className="bg-[var(--card-bg)] p-4 rounded-lg shadow-inner relative">
-      <h3 className="text-lg font-semibold text-[var(--primary)] mb-2">{platform}</h3>
+      <h3 className="text-lg font-semibold text-[var(--primary)] mb-2">
+        {platform}
+      </h3>
       {isEditing ? (
         <textarea
           value={editContent}
@@ -59,7 +72,9 @@ const OutputCard: React.FC<OutputCardProps> = ({
           rows={5}
         />
       ) : (
-        <div className="text-[var(--text-primary)] mb-4">{formattedContent()}</div>
+        <div className="text-[var(--text-primary)] mb-4">
+            {formattedContent()}
+          </div>
       )}
       {shouldTruncate && !isEditing && (
         <button
@@ -90,17 +105,13 @@ const OutputCard: React.FC<OutputCardProps> = ({
         >
           {isEditing ? "Cancel Edit" : "Edit"}
         </button>
-        <ShareButtons platform={platform} url={window.location.href} title={editContent} />
+        <ShareButtons
+          platform={platform}
+          url={window.location.href}
+          title={editContent}
+        />
         <button
-          onClick={() => {
-            const blob = new Blob([editContent], { type: "text/plain" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${platform}_output.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-          }}
+          onClick={handleDownload}
           className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors text-sm"
         >
           Download
