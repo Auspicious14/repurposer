@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface OutputCardProps {
@@ -14,15 +15,37 @@ const OutputCard: React.FC<OutputCardProps> = ({
   onCopy,
   showCopiedMessage,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 200; // Adjust threshold for truncation
+  const shouldTruncate = content.length > maxLength && !isExpanded;
+
+  const displayContent = shouldTruncate ? `${content.slice(0, maxLength)}...` : content;
+
   return (
-    <div className="bg-gray-50 p-4 rounded-lg shadow-inner relative">
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">{platform}</h3>
-      <p className="text-gray-700 whitespace-pre-wrap text-sm mb-4">
-        {content}
+    <div className="bg-[var(--card-bg)] p-4 rounded-lg shadow-inner relative">
+      <h3 className="text-lg font-semibold text-[var(--primary)] mb-2">{platform}</h3>
+      <p className="text-[var(--text-primary)] whitespace-pre-wrap text-sm mb-4">
+        {displayContent}
       </p>
+      {shouldTruncate && (
+        <button
+          onClick={() => setIsExpanded(true)}
+          className="text-[var(--primary)] text-sm hover:underline"
+        >
+          Show More
+        </button>
+      )}
+      {isExpanded && (
+        <button
+          onClick={() => setIsExpanded(false)}
+          className="text-[var(--secondary)] text-sm hover:underline mt-2"
+        >
+          Show Less
+        </button>
+      )}
       <button
         onClick={() => onCopy(content)}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-sm"
+        className="px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-indigo-700 transition-colors duration-200 text-sm mt-2"
       >
         Copy to Clipboard
       </button>
