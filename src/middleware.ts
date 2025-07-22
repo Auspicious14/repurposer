@@ -8,11 +8,10 @@ const PROTECTED_ROUTES = ["/dashboard", "/dashboard/*"];
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
-
-  if (
-    PROTECTED_ROUTES.some((route) =>
-      pathname.match(new RegExp(`^${route.replace("*", ".*")}$`))
-    )
+ const isProtected = PROTECTED_ROUTES.some((route) =>
+    route === pathname || (route.endsWith("/*") && pathname.startsWith(route.replace("/*", "")))
+  );
+  if (isProtected)
   ) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
