@@ -9,12 +9,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'var(--primary)',
-        secondary: 'var(--secondary)',
-        background: 'var(--background)',
-        card: 'var(--card-bg)',
-        'text-primary': 'var(--text-primary)',
-        'text-secondary': 'var(--text-secondary)',
+        primary: "var(--primary)",
+        secondary: "var(--secondary)",
+        background: "var(--background)",
+        card: "var(--card-bg)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -23,6 +23,5 @@ module.exports = {
       },
     },
   },
-  darkMode: 'class',
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

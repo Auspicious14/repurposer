@@ -31,9 +31,7 @@ export default function RootLayout({
   // const isLoggedIn = request.headers.get["x-status-status"] === "true";
   const isLoggedIn = true;
   return (
-    <div
-      className={`${poppins.variable} ${openSans.variable} ${montserrat.variable}`}
-    >
+    <div className={`${openSans.variable}`}>
       <Header isLoggedIn={isLoggedIn} />
       {children}
 
