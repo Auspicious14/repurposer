@@ -8,11 +8,16 @@ import { useAuth } from "@/modules/auth/context";
 export const Header = () => {
   const { theme, toggleTheme } = ThemeState();
   const { isLoggedIn, user, logout } = useAuth();
-  
+
   const router = useRouter();
   return (
     <header className="sticky top-0 z-50 bg-[var(--card-bg)] shadow-sm py-4 px-6 flex justify-between items-center">
-      <h1 className="text-2xl font-bold text-[var(--text-primary)]">Forma</h1>
+      <Link
+        href={"/"}
+        className="text-2xl font-bold text-[var(--text-primary)]"
+      >
+        Forma
+      </Link>
       <nav className="hidden md:flex items-center gap-6 text-[var(--text-secondary)]">
         <Link href="/dashboard" className="hover:text-[var(--primary)]">
           Dashboard
@@ -24,7 +29,7 @@ export const Header = () => {
           Community
         </Link>
       </nav>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <button
           onClick={toggleTheme}
           className="p-2 rounded-full hover:bg-[var(--background)]"
@@ -33,9 +38,9 @@ export const Header = () => {
           {theme === "light" ? "☀️" : "🌙"}
         </button>
         {isLoggedIn ? (
-          <LogoutButton />
+          <LogoutButton handleLogout={logout} />
         ) : (
-          <button onClick={() => router.push("/login")} className="btn">
+          <button onClick={() => router.push("/login")} className="btn text-sm">
             Login
           </button>
         )}

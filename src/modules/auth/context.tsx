@@ -1,5 +1,11 @@
 "use client";
-import React, { createContext, useCallback, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { FormikHelpers } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -32,10 +38,10 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthContextProvider = ({
   children,
-  initialUser = null
+  initialUser = null,
 }: {
   children: React.ReactNode;
-  initialUser: any
+  initialUser: any;
 }) => {
   const router = useRouter();
   const [user, setUser] = useState<any>(initialUser);
@@ -59,9 +65,9 @@ export const AuthContextProvider = ({
       const response = await api.post(url, values);
       if (response?.data?.success) {
         if (type === "signin") {
-          const userData = response.data?.data?.user; 
+          const userData = response.data?.data?.user;
           const token = response.data?.data?.token;
-          
+
           localStorage.setItem("token", token);
           setCookie("token", token, 7);
           setUser(userData);
@@ -115,7 +121,7 @@ export const AuthContextProvider = ({
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUser(null);
-    router.push("/login")
+    router.push("/login");
   };
 
   return (
