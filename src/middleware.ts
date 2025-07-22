@@ -29,7 +29,7 @@ export function middleware(req: NextRequest) {
     try {
       const decoded = jwt.verify(token, SECRET_KEY);
       console.log("Middleware - Token valid, user:", decoded);
-    } catch (error) {
+    } catch (error: any) {
       console.log("Middleware - Token invalid:", error.message);
       return NextResponse.redirect(new URL("/login", req.url));
     }
