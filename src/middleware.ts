@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
-const PROTECTED_ROUTES = ["/dashboard", "/dashboard/**"];
+const PROTECTED_ROUTES = ["/dashboard", "/dashboard/*"];
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
