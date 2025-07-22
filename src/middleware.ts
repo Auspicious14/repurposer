@@ -11,8 +11,7 @@ export function middleware(req: NextRequest) {
  const isProtected = PROTECTED_ROUTES.some((route) =>
     route === pathname || (route.endsWith("/*") && pathname.startsWith(route.replace("/*", "")))
   );
-  if (isProtected)
-  ) {
+  if (isProtected) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
