@@ -23,7 +23,7 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     } catch {
       // Token is invalid, continue to auth page
-      return NextResponse.redirect(new URL("/login", req.url))
+     // return NextResponse.redirect(new URL("/login", req.url))
     }
   }
   
