@@ -23,7 +23,7 @@ export async function getAuthenticatedUser(context: GetServerSidePropsContext) {
 }
 
 
-export function withOptionalAuth(getServerSidePropsFunc?: GetServerSideProps) {
+export const withAuth = (getServerSidePropsFunc?: GetServerSideProps) => {
   return async (context: GetServerSidePropsContext) => {
     const user = await getAuthenticatedUser(context);
     
@@ -42,4 +42,35 @@ export function withOptionalAuth(getServerSidePropsFunc?: GetServerSideProps) {
       },
     };
   };
-}
+};
+
+// Helper for protected pages (redirect if not authenticated)
+export const withProtectedAuth = (getServerSidePropsFunc?: GetServerSideProps) => {
+  return async (context: GetServerSidePropsContext) => {
+    const user = await getAuthenticatedUser(context);
+    
+    if (!user) {
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false,
+        },
+      };
+    }
+    
+    let additionalProps = {};
+    if (getServerSidePropsFunc) {
+      const result = await getServerSidePropsFunc(context);
+      if ('props' in result) {
+        additionalProps = result.props;
+      }
+    }
+    
+    return {
+      props: {
+        user,
+        ...additionalProps,
+      },
+    };
+  };
+};
