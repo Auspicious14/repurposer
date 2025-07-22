@@ -23,7 +23,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
 }) => {
   const getPlatformShares = () => {
     const shares = {
-      "Twitter/X (Thread)": [
+      "Twitter": [
         <TwitterShareButton
           key="twitter"
           url={url}
