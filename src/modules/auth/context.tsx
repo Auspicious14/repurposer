@@ -38,7 +38,7 @@ export const AuthContextProvider = ({
   initialUser: any
 }) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>(initalUser);
+  const [user, setUser] = useState<any>(initialUser);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authStatus, setAuthStatus] = useState<string | null>(null);
