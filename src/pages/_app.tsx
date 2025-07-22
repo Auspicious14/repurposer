@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <AppContextProvider>
       <RootLayout>
         <ThemeProvider attribute="class">
-        <Component {...pageProps} />
+        <Component {...pageProps} initialUser={pageProps.user} />
       </ThemeProvider>
       </RootLayout>
     </AppContextProvider>
