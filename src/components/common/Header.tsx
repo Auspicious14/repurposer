@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ThemeState } from "@/context/theme";
 import { useAuth } from "@/modules/auth/context";
 
-export const Header: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+export const Header = () => {
   const { theme, toggleTheme } = ThemeState();
   const { isLoggedIn, user, logout } = useAuth();
   
