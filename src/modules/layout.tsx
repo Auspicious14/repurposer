@@ -28,11 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const isLoggedIn = request.headers.get["x-status-status"] === "true";
-  const isLoggedIn = true;
+  
   return (
     <div className={`${openSans.variable}`}>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header />
       {children}
 
       <Footer />
