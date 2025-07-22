@@ -32,15 +32,21 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthContextProvider = ({
   children,
+  initialUser = null
 }: {
   children: React.ReactNode;
+  initialUser: any
 }) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(initalUser);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authStatus, setAuthStatus] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!user);
+  }, [user]);
 
   const handleAuthRequest = async (
     url: string,
@@ -53,8 +59,13 @@ export const AuthContextProvider = ({
       const response = await api.post(url, values);
       if (response?.data?.success) {
         if (type === "signin") {
-          localStorage.setItem("token", response.data?.data?.token);
-          setCookie("token", response.data?.data?.token, 7);
+          const userData = response.data?.data?.user; 
+          const token = response.data?.data?.token;
+          
+          localStorage.setItem("token", token);
+          setCookie("token", token, 7);
+          setUser(userData);
+          setIsLoggedIn(true);
           toast.success("🎉 Welcome back!");
           router.push("/dashboard");
         } else {
@@ -104,6 +115,7 @@ export const AuthContextProvider = ({
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUser(null);
+    router.push("/login")
   };
 
   return (
