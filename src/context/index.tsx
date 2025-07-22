@@ -8,22 +8,22 @@ export const combineContext = (...components: FC[]): FC<any> => {
     (AccumulatedComponents: any, CurrentComponent: any) => {
       const WrapperComponent: FC<any> = ({
         children,
+        ...props // Accept all props
       }: ComponentProps<FC<any>>): JSX.Element => {
         return (
-          <AccumulatedComponents>
-            <CurrentComponent>{children}</CurrentComponent>
+          <AccumulatedComponents {...props}>
+            <CurrentComponent {...props}>{children}</CurrentComponent>
           </AccumulatedComponents>
         );
       };
 
-      // Assign a displayName to the WrapperComponent
       WrapperComponent.displayName = `Combined(${
         CurrentComponent.displayName || CurrentComponent.name || "Unknown"
       })`;
 
       return WrapperComponent;
     },
-    ({ children }: any) => (
+    ({ children, ...props }: any) => (
       <>
         {children}
         <Toaster
