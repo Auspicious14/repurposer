@@ -7,6 +7,8 @@ import { useAuth } from "@/modules/auth/context";
 
 export const Header: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const { theme, toggleTheme } = ThemeState();
+  const { isLoggedIn, user, logout } = useAuth();
+  
   const router = useRouter();
   return (
     <header className="sticky top-0 z-50 bg-[var(--card-bg)] shadow-sm py-4 px-6 flex justify-between items-center">
