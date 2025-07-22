@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { GetServerSidePropsContext } from 'next';
-
+import { GetServerSidePropsContext, GetServerSideProps } from 'next';
 
 export async function getAuthenticatedUser(context: GetServerSidePropsContext) {
   const token = context.req.cookies.token;
