@@ -177,7 +177,6 @@ export const SignUpPage: React.FC = () => {
                   )}
                 </button>
               </div>
-              <PasswordCheck password={values.confirmPassword} />
 
               <button
                 type="submit"
