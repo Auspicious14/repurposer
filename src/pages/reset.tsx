@@ -10,7 +10,7 @@ return (
 )
 }
 
-export const getServerSideProps: GetServerSideProps<ResetProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
   const token = query.token as string | undefined;
 
