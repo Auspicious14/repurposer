@@ -35,7 +35,7 @@ export const ForgotPasswordPage = () => {
             Send Reset Link
           </button>
           {/*{message && <p className="text-center text-[var(--text-primary)] mt-2">{message}</p>}*/}
-        </form>
+        </Formik>
         <p className="text-center text-[var(--text-secondary)] mt-4">
           <Link href="/login" className="text-[var(--primary)] hover:underline">Back to Login</Link>
         </p>
