@@ -16,7 +16,7 @@ export const ResetPasswordPage = () => {
 
   useEffect(() => {
     if (!token) {
-      setMessage("Invalid reset link");
+      toast.error("Invalid reset link");
     }
   }, [token]);
 
