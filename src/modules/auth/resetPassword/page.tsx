@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Formik } from "Formik"
+import { Formik } from "formik"
 import Link from "next/link"
 import { api } from "@/lib/api"
 import { TextInput } from "@/components/input/TextInput"
