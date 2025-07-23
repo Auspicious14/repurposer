@@ -45,6 +45,7 @@ export const ResetPasswordPage = () => {
           <div className="space-y-4">
           <TextInput
             label="New Password"
+            name="newPassword"
             type="password"
             placeholder="New Password"
            // className="w-full p-2 border border-[var(--text-secondary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
