@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useRouter } from "next/navigation";
 import { Formik } from "formik"
 import Link from "next/link"
@@ -9,10 +9,8 @@ import api from "@/lib/api"
 import { TextInput } from "@/components/input/TextInput"
 import { toast } from "sonner"
 
-export const ResetPasswordPage = () => {
+export const ResetPasswordPage: FC<{token:string}> = ({token}) => {
   const router = useRouter();
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
 
   useEffect(() => {
     if (!token) {
