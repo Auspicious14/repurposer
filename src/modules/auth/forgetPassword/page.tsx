@@ -20,12 +20,7 @@ export const ForgotPasswordPage = () => {
   const handleSubmit = async (values: ForgotPasswordValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     try {
       const result = await forgotPassword(values.email);
-      if (result.success) {
-        setMessage("Check your mail for the reset link");
-        setTimeout(() => router.push("/login"), 2000);
-      } else {
-        setMessage(result.message || "An error occurred");
-      }
+      
     } catch (error) {
       setMessage("Failed to send reset link");
     } finally {
