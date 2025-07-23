@@ -20,7 +20,7 @@ export const ForgotPasswordPage = () => {
         <p className="text-[var(--text-secondary)] text-center mb-6">
           Enter your email to receive a password reset link.
         </p>
-        <Formik initialValues={{ email: "" }} onSubmit={forgotPassword}>
+        <Formik initialValues={{ email: "" }} onSubmit={(values, actions) => forgotPassword(values.email)}>
          <TextInput 
            type="email"
            label="Email"
