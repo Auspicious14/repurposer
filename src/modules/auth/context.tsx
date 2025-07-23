@@ -106,7 +106,7 @@ export const AuthContextProvider = ({
   const forgotPassword = useCallback(async (email: string) => {
     setIsLoading(true);
     try {
-      await api.post("/auth/forgetPassword", { email });
+      await api.post("/auth/forget-password", { email });
       toast.success("Password reset email sent");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to send reset email");
