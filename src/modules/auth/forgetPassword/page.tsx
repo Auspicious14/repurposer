@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/Link"
+import Link from "next/link"
 import { Formik } from "formik"
 import { useAuth } from "@/modules/auth/context"
 import { TextInput } from "@/components/input/TextInput"
