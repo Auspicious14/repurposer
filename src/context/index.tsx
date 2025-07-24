@@ -2,6 +2,7 @@ import React, { FC, ComponentProps, JSX } from "react";
 import { Toaster } from "sonner";
 import { AuthContextProvider } from "../modules/auth/context";
 import { ThemeContextProvider } from "./theme";
+import { TemplatesProvider } from "@/modules/templates/context";
 
 export const combineContext = (...components: FC[]): FC<any> => {
   const CombinedComponent = components.reduce(
@@ -42,5 +43,9 @@ export const combineContext = (...components: FC[]): FC<any> => {
   return CombinedComponent;
 };
 
-const providers = [AuthContextProvider, ThemeContextProvider] as any;
+const providers = [
+  AuthContextProvider,
+  ThemeContextProvider,
+  TemplatesProvider,
+] as any;
 export const AppContextProvider = combineContext(...providers);
