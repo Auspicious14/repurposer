@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { useAuth } from "@/modules/auth/context";
 import api from "@/lib/api";
+import { toast } from "sonner"
 
 interface Template {
   _id: string;
