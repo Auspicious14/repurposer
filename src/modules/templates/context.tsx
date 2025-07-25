@@ -5,10 +5,14 @@ import { useAuth } from "@/modules/auth/context";
 import api from "@/lib/api";
 
 interface Template {
-  id: string;
+  _id: string;
   name: string;
   content: string;
   platform: "twitter" | "linkedin" | "instagram";
+  createdBy: string
+  updatedBy: string
+  createdAt: Date | number
+  updatedAt: Date | number
 }
 
 interface TemplatesContextType {
@@ -32,9 +36,9 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
   const fetchTemplates = async () => {
     if (!user) return;
     try {
-      const res = await api.get("/api/templates");
+      const res = await api.get("/templates");
       if (res.status !== 200) throw new Error("Failed to fetch templates");
-      const data = await res.data;
+      const data = await res.data.data;
       setTemplates(data);
     } catch (err) {
       setError("Error loading templates");
@@ -43,9 +47,10 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
 
   const createTemplate = async (values: { name: string; content: string; platform: string }) => {
     try {
-      const res = await api.post("/api/templates", values);
+      const res = await api.post("/templates", values);
       if (res.status === 201) {
-        setTemplates((prev) => [...prev, res.data]);
+        toast.success("Template created successfully")        
+        setTemplates((prev) => [...prev, res.data.data]);
         return;
       } else {
         setError("Failed to create template");
