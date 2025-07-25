@@ -7,10 +7,14 @@ import { useTemplates } from "@/modules/templates/context";
 import { ModalComponent } from "./components/modal";
 
 interface Template {
-  id: string;
+  _id: string;
   name: string;
   content: string;
   platform: "twitter" | "linkedin" | "instagram";
+  createdBy: string
+  updatedBy: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface TemplatesProps {
@@ -86,7 +90,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             {templates.map((template) => (
               <div
-                key={template.id}
+                key={template._id}
                 className="card p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg"
                 onClick={() => setSelectedTemplate(template)}
               >
@@ -105,7 +109,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
                 {selectedTemplate.name} Preview
               </h2>
               <div className="mb-4 p-4 border border-[var(--text-secondary)] rounded-lg bg-white">
-                {selectedTemplate.platform === "twitter" && (
+                {selectedTemplate.platform.toLowerCase() === "twitter" && (
                   <div className="space-y-2">
                     {selectedTemplate.content.split("\n").map((line, i) => (
                       <div key={i} className="border-b border-gray-200 pb-2">
@@ -116,12 +120,12 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
                     ))}
                   </div>
                 )}
-                {selectedTemplate.platform === "linkedin" && (
+                {selectedTemplate.platform.toLowerCase() === "linkedin" && (
                   <p className="text-[var(--text-primary)]">
                     {selectedTemplate.content}
                   </p>
                 )}
-                {selectedTemplate.platform === "instagram" && (
+                {selectedTemplate.platform.toLowerCase() === "instagram" && (
                   <p className="text-[var(--text-primary)] italic">
                     {selectedTemplate.content}
                   </p>
