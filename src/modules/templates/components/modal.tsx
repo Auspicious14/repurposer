@@ -3,7 +3,13 @@
 import { ReactNode } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextInput } from "@/components/input/TextInput";
+import * as Yup from 'yup'
 
+const FormSchema = Yup.object().shape({
+    name: Yup.string().required('Template Name is required'),
+    content: Yup.string().required('Content is required'),
+    platform: Yup.string().required('Platform is required')
+})
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,7 +30,7 @@ export const ModalComponent = ({
   if (!isOpen) return null;
 
   return (
-    <dialog open className="modal">
+    <dialog open className="modal w-full">
       <div className="modal-box bg-white rounded-lg shadow-lg p-6 max-w-md w-full border border-[var(--text-secondary)]">
         <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
           {title}
@@ -32,36 +38,24 @@ export const ModalComponent = ({
         <Formik
           initialValues={{ name: "", content: "", platform: "twitter" }}
           onSubmit={onSubmit}
-          validate={(values) => {
-            const errors: Partial<{
-              name: string;
-              content: string;
-              platform: string;
-            }> = {};
-            if (!values.name) errors.name = "Name is required";
-            if (!values.content) errors.content = "Content is required";
-            if (!values.platform) errors.platform = "Platform is required";
-            return errors;
-          }}
+          validateSchema={FormSchema}
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <Field
-                as={TextInput}
+              <TextInput
                 name="name"
                 label="Template Name"
                 placeholder="Enter template name"
                 required
               />
-              <Field
-                as={TextInput}
-                name="content"
+              <TextInput
                 label="Content"
+                type="textarea"
+                name="content"
                 placeholder="Enter content"
                 required
               />
-              <Field
-                as={TextInput}
+              <TextInput
                 name="platform"
                 label="Platform"
                 placeholder="e.g., twitter, linkedin, instagram"
@@ -87,9 +81,6 @@ export const ModalComponent = ({
           )}
         </Formik>
       </div>
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={onClose}>close</button>
-      </form>
     </dialog>
   );
 };
