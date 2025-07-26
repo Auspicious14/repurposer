@@ -61,10 +61,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  useEffect(() => {
-    fetchTemplates();
-  }, [user]);
-
+  
   return (
     <TemplatesContext.Provider value={{ templates, error, fetchTemplates, createTemplate }}>
       {children}
