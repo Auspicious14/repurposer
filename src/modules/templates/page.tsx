@@ -11,10 +11,10 @@ interface Template {
   name: string;
   content: string;
   platform: "twitter" | "linkedin" | "instagram";
-  createdBy: string
-  updatedBy: string
-  createdAt: string
-  updatedAt: string
+  createdBy: string;
+  updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface TemplatesProps {
@@ -31,7 +31,6 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
   useEffect(() => {
     fetchTemplates();
   }, []);
-
 
   const handleFormat = (type: "tone" | "length" | "style", value: string) => {
     if (selectedTemplate) {
@@ -105,16 +104,19 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
             ))}
           </div>
           {selectedTemplate && (
-            <div className="card p-6 rounded-lg shadow-md">
+            <div className="card p-6 rounded-lg shadow-md dark:bg-[var(--primary)]">
               <h2 className="text-xl text-[var(--text-primary)] mb-4">
                 {selectedTemplate.name} Preview
               </h2>
-              <div className="mb-4 p-4 border border-[var(--text-secondary)] rounded-lg bg-white">
+              <div className="mb-4 p-4 border border-[var(--text-secondary)] text-[var(--text-primary)] rounded-lg bg-white dark:bg-[var(--background)]">
                 {selectedTemplate.platform.toLowerCase() === "twitter" && (
                   <div className="space-y-2">
                     {selectedTemplate.content.split("\n").map((line, i) => (
-                      <div key={i} className="border-b border-gray-200 pb-2">
-                        <p className="text-sm text-[var(--text-primary)]">
+                      <div
+                        key={i}
+                        className="border-b border-gray-200 dark:border-gray-600 pb-2"
+                      >
+                        <p className="text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]">
                           {line}
                         </p>
                       </div>
@@ -122,12 +124,12 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
                   </div>
                 )}
                 {selectedTemplate.platform.toLowerCase() === "linkedin" && (
-                  <p className="text-[var(--text-primary)]">
+                  <p className="text-[var(--text-primary)] dark:text-[var(--text-primary)]">
                     {selectedTemplate.content}
                   </p>
                 )}
                 {selectedTemplate.platform.toLowerCase() === "instagram" && (
-                  <p className="text-[var(--text-primary)] italic">
+                  <p className="text-[var(--text-primary)] dark:text-[var(--text-primary)] italic">
                     {selectedTemplate.content}
                   </p>
                 )}
@@ -135,32 +137,32 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
               <div className="flex gap-2 mb-4">
                 <button
                   onClick={() => handleFormat("tone", "casual")}
-                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700"
+                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700 dark:hover:bg-pink-800"
                 >
                   Casual Tone
                 </button>
                 <button
                   onClick={() => handleFormat("tone", "professional")}
-                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700"
+                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700 dark:hover:bg-pink-800"
                 >
                   Professional Tone
                 </button>
                 <button
                   onClick={() => handleFormat("length", "short")}
-                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700"
+                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700 dark:hover:bg-pink-800"
                 >
                   Short
                 </button>
                 <button
                   onClick={() => handleFormat("style", "bullets")}
-                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700"
+                  className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700 dark:hover:bg-pink-800"
                 >
                   Bullets
                 </button>
               </div>
               <Link
                 href={`/templates/${selectedTemplate._id}`}
-                className="text-[var(--secondary)] hover:underline"
+                className="text-[var(--secondary)] hover:underline dark:text-pink-400"
               >
                 View Details
               </Link>

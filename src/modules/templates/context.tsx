@@ -1,29 +1,41 @@
 "use client";
 
-import { createContext, useState, useEffect, useContext, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
 import { useAuth } from "@/modules/auth/context";
 import api from "@/lib/api";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 interface Template {
   _id: string;
   name: string;
   content: string;
   platform: "twitter" | "linkedin" | "instagram";
-  createdBy: string
-  updatedBy: string
-  createdAt: string
-  updatedAt: string
+  createdBy: string;
+  updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface TemplatesContextType {
   templates: Template[];
   error: string | null;
   fetchTemplates: () => Promise<void>;
-  createTemplate: (values: { name: string; content: string; platform: string }) => Promise<void>;
+  createTemplate: (values: {
+    name: string;
+    content: string;
+    platform: string;
+  }) => Promise<void>;
 }
 
-const TemplatesContext = createContext<TemplatesContextType | undefined>(undefined);
+const TemplatesContext = createContext<TemplatesContextType | undefined>(
+  undefined
+);
 
 interface TemplatesProviderProps {
   children: ReactNode;
@@ -46,11 +58,15 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  const createTemplate = async (values: { name: string; content: string; platform: string }) => {
+  const createTemplate = async (values: {
+    name: string;
+    content: string;
+    platform: string;
+  }) => {
     try {
       const res = await api.post("/templates", values);
       if (res.status === 201) {
-        toast.success("Template created successfully")        
+        toast.success("Template created successfully");
         setTemplates((prev) => [...prev, res.data.data]);
         return;
       } else {
@@ -61,9 +77,10 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  
   return (
-    <TemplatesContext.Provider value={{ templates, error, fetchTemplates, createTemplate }}>
+    <TemplatesContext.Provider
+      value={{ templates, error, fetchTemplates, createTemplate }}
+    >
       {children}
     </TemplatesContext.Provider>
   );
