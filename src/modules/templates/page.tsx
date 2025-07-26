@@ -26,11 +26,12 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { templates, error, createTemplate } = useTemplates();
+  const { templates, error, createTemplate, fetchTemplates } = useTemplates();
 
   useEffect(() => {
-    // No fetch here; assumed handled by useTemplates context
+    fetchTemplates();
   }, []);
+
 
   const handleFormat = (type: "tone" | "length" | "style", value: string) => {
     if (selectedTemplate) {
