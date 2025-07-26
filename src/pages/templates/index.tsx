@@ -1,4 +1,6 @@
 import { TemplatesPage } from "@/modules/templates/page";
+import { GetServerSideProps } from "next";
+import { withProtectedAuth } from "@/utils/auth"
 
 export default function Templates() {
   const handleSelectTemplate = (template: any) => {
@@ -8,3 +10,5 @@ export default function Templates() {
 
   return <TemplatesPage onSelectTemplate={handleSelectTemplate} />;
 }
+
+export const getServerSideProps = withProtectedAuth();
