@@ -134,7 +134,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
                   </p>
                 )}
               </div>
-              <div className="flex gap-2 mb-4">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
                 <button
                   onClick={() => handleFormat("tone", "casual")}
                   className="bg-[var(--secondary)] text-white py-1 px-3 rounded-lg hover:bg-pink-700 dark:hover:bg-pink-800"
