@@ -158,7 +158,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesProps) => {
                 </button>
               </div>
               <Link
-                href={`/templates/${selectedTemplate.id}`}
+                href={`/templates/${selectedTemplate._id}`}
                 className="text-[var(--secondary)] hover:underline"
               >
                 View Details
