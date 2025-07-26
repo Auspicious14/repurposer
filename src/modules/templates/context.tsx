@@ -12,8 +12,8 @@ interface Template {
   platform: "twitter" | "linkedin" | "instagram";
   createdBy: string
   updatedBy: string
-  createdAt: Date | number
-  updatedAt: Date | number
+  createdAt: string
+  updatedAt: string
 }
 
 interface TemplatesContextType {
