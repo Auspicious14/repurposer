@@ -184,7 +184,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
   }, []);
 
   // Generate preview with API call
-  const generatePreview = useCallback(async (request: PreviewRequest) => {
+  const generatePreview = async (request: PreviewRequest) => {
     if (!request.content.trim() || !request.tone) {
       setPreviewContent("");
       return;
@@ -214,7 +214,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     } finally {
       setIsPreviewLoading(false);
     }
-  }, []);
+  };
 
   // Save output
   const saveOutput = useCallback(async (outputData?: any) => {
