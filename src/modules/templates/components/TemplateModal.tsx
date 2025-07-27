@@ -1,17 +1,19 @@
+
 "use client";
 
-import { ReactNode, useEffect } from "react";
-import { Formik, Form, Field } from "formik";
+import { useEffect } from "react";
+import { Formik, Form } from "formik";
 import { TextInput } from "@/components/input/TextInput";
-import * as Yup from 'yup'
+import * as Yup from 'yup';
+import { PLATFORMS, VALIDATION_MESSAGES } from '../constants';
 
 const FormSchema = Yup.object().shape({
-    name: Yup.string().required('Template Name is required'),
-    content: Yup.string().required('Content is required'),
-    platform: Yup.string().required('Platform is required')
-})
+  name: Yup.string().required(VALIDATION_MESSAGES.TEMPLATE_NAME_REQUIRED),
+  content: Yup.string().required(VALIDATION_MESSAGES.CONTENT_REQUIRED),
+  platform: Yup.string().required(VALIDATION_MESSAGES.PLATFORM_REQUIRED)
+});
 
-interface ModalProps {
+interface TemplateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (values: {
@@ -20,14 +22,20 @@ interface ModalProps {
     platform: string;
   }) => Promise<void>;
   title: string;
+  initialValues?: {
+    name: string;
+    content: string;
+    platform: string;
+  };
 }
 
-export const ModalComponent = ({
+export const TemplateModal = ({
   isOpen,
   onClose,
   onSubmit,
   title,
-}: ModalProps) => {
+  initialValues = { name: "", content: "", platform: "" }
+}: TemplateModalProps) => {
   
   useEffect(() => {
     if (isOpen) {
@@ -57,12 +65,12 @@ export const ModalComponent = ({
       />
       
       <div 
-        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-lg transform transition-all duration-300 scale-100 animate-in fade-in zoom-in-95"
+        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-2xl transform transition-all duration-300 scale-100 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 rounded-t-2xl">
           <h2 
             id="modal-title"
             className="text-xl font-semibold text-gray-900 dark:text-white"
@@ -84,31 +92,59 @@ export const ModalComponent = ({
         {/* Content */}
         <div className="p-6">
           <Formik
-            initialValues={{ name: "", content: "", platform: "twitter" }}
+            initialValues={initialValues}
             onSubmit={onSubmit}
             validationSchema={FormSchema}
+            enableReinitialize
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, values, setFieldValue }) => (
               <Form className="space-y-5">
+                {/* Template Name */}
                 <TextInput
                   name="name"
                   label="Template Name"
                   placeholder="Enter template name"
                   required
                 />
+
+                {/* Platform */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Platform *
+                  </label>
+                  <select
+                    name="platform"
+                    value={values.platform}
+                    onChange={(e) => setFieldValue('platform', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-colors duration-200"
+                  >
+                    <option value="">Select Platform</option>
+                    {PLATFORMS.map(platform => (
+                      <option key={platform.value} value={platform.value}>
+                        {platform.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Template Content */}
                 <TextInput
-                  label="Content"
-                  type="textarea"
                   name="content"
-                  placeholder="Enter content"
+                  type="textarea"
+                  label="Template Content"
+                  placeholder="Enter your template with placeholders like {{title}}, {{body}}, {{cta}}..."
+                  rows={8}
                   required
                 />
-                <TextInput
-                  name="platform"
-                  label="Platform"
-                  placeholder="e.g., twitter, linkedin, instagram"
-                  required
-                />
+                
+                {/* Show placeholder count */}
+                {values.content && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Placeholders found: {(values.content.match(/\{\{\w+\}\}/g) || []).length}
+                    </p>
+                  </div>
+                )}
                 
                 {/* Actions */}
                 <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -134,7 +170,7 @@ export const ModalComponent = ({
                         Creating...
                       </span>
                     ) : (
-                      "Create"
+                      "Create Template"
                     )}
                   </button>
                 </div>
