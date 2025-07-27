@@ -120,11 +120,11 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
       >
         {({ values, setFieldValue, isSubmitting }) => {
           // Trigger preview when form values change
-          useEffect(() => {
+          //useEffect(() => {
             if (values.content && values.tone) {
               handleContentChange(values.content, values.tone, values.platform);
             }
-          }, [values.content, values.tone, values.platform]);
+        //  }, [values.content, values.tone, values.platform]);
 
           return (
             <div className="space-y-6">
