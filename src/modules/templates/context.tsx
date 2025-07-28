@@ -192,7 +192,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     return matches ? matches.map((match) => match.slice(2, -2)) : [];
   }, []);
 
-  // Update single sample data field
+
   const updateSampleData = useCallback((key: string, value: string) => {
     setSampleData((prev) => ({ ...prev, [key]: value }));
   }, []);
@@ -208,7 +208,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     setPreviewError(null);
 
     try {
-      const response = await api.post("/preview", {
+      const response = await api.post("/templates/preview", {
         content: request.content,
         tone: request.tone,
         sampleData: request.sampleData,
@@ -246,7 +246,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
           sampleData,
         };
 
-        const response = await api.post("/outputs", dataToSave);
+        const response = await api.post("/templates/outputs", dataToSave);
 
         if (response.data.success) {
           toast.success("Output saved successfully!");
