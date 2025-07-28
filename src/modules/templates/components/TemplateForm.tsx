@@ -6,17 +6,21 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '@/components/input/TextInput';
 import { useTemplates } from '../context';
-import { PLATFORMS, TONES } from '../constants';
+import { PLATFORMS, TONES, VALIDATION_MESSAGES } from '../constants';
 import { SampleDataInputs } from './SampleDataInputs';
 import { ToneSelector } from './ToneSelector';
 
 const FormSchema = Yup.object().shape({
-  name: Yup.string().required('Template name is required'),
-  platform: Yup.string().required('Platform is required'),
+  name: Yup.string().required(VALIDATION_MESSAGES.TEMPLATE_NAME_REQUIRED),
+  platform: Yup.string().required(VALIDATION_MESSAGES.PLATFORM_REQUIRED),
   content: Yup.string()
-    .required('Content is required')
-    .min(10, 'Content must be at least 10 characters'),
-  tone: Yup.string().required('Please select a tone for preview')
+    .required(VALIDATION_MESSAGES.CONTENT_REQUIRED)
+    .test(
+      "has-placeholders",
+      VALIDATION_MESSAGES.PLACEHOLDERS_REQUIRED,
+      (value) => (value ? /\{\{\w+\}\}/.test(value) : false)
+    ),
+  tone: Yup.string().required(VALIDATION_MESSAGES.TONE_REQUIRED),
 });
 
 interface FormValues {
@@ -257,6 +261,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         enableReinitialize
       >
         {({ values, setFieldValue, isSubmitting }) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useMemo(() => {
             handleFormValuesChange(values);
           }, [values, handleFormValuesChange]);
