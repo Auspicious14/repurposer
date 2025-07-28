@@ -87,7 +87,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
 
   // Fetch templates
   const fetchTemplates = async () => {
-    if (!user) return;
     try {
       const res = await api.get("/templates");
       if (res.status !== 200) throw new Error("Failed to fetch templates");
@@ -191,7 +190,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     const matches = content.match(/\{\{(\w+)\}\}/g);
     return matches ? matches.map((match) => match.slice(2, -2)) : [];
   }, []);
-
 
   const updateSampleData = useCallback((key: string, value: string) => {
     setSampleData((prev) => ({ ...prev, [key]: value }));

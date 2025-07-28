@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,7 +10,14 @@ interface Template {
   _id: string;
   name: string;
   content: string;
-  platform: "twitter" | "linkedin" | "instagram" | "blog" | "email" | "facebook" | "tiktok";
+  platform:
+    | "twitter"
+    | "linkedin"
+    | "instagram"
+    | "blog"
+    | "email"
+    | "facebook"
+    | "tiktok";
   createdBy: string;
   updatedBy: string;
   createdAt: string;
@@ -24,13 +30,15 @@ interface TemplatesPageProps {
 
 export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
   const router = useRouter();
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { templates, error, createTemplate, fetchTemplates } = useTemplates();
 
   useEffect(() => {
     fetchTemplates();
-  }, [fetchTemplates]);
+  }, []);
 
   const handleFormat = (type: "tone" | "length" | "style", value: string) => {
     if (selectedTemplate) {
@@ -69,7 +77,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
   };
 
   const navigateToBuilder = () => {
-    router.push('/templates/create');
+    router.push("/templates/create");
   };
 
   const getPlatformIcon = (platform: string) => {
@@ -80,16 +88,16 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
       blog: "📝",
       email: "📧",
       facebook: "👥",
-      tiktok: "🎵"
+      tiktok: "🎵",
     };
     return icons[platform as keyof typeof icons] || "📄";
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -106,7 +114,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
               Manage your content repurposing templates
             </p>
           </div>
-          
+
           <div className="flex gap-3">
             <button
               onClick={() => setIsModalOpen(true)}
@@ -126,23 +134,46 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
         {error ? (
           <div className="text-center py-12">
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md mx-auto">
-              <svg className="w-12 h-12 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-12 h-12 mx-auto mb-4 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
-              <p className="text-red-700 dark:text-red-400 font-medium">{error}</p>
+              <p className="text-red-700 dark:text-red-400 font-medium">
+                {error}
+              </p>
             </div>
           </div>
         ) : templates.length === 0 ? (
           <div className="text-center py-12">
             <div className="max-w-md mx-auto">
-              <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                className="w-16 h-16 mx-auto mb-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
               <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">
                 No templates yet
               </h3>
               <p className="text-[var(--text-secondary)] mb-6">
-                Create your first template to get started with content repurposing
+                Create your first template to get started with content
+                repurposing
               </p>
               <button
                 onClick={navigateToBuilder}
@@ -164,7 +195,9 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">{getPlatformIcon(template.platform)}</span>
+                      <span className="text-lg">
+                        {getPlatformIcon(template.platform)}
+                      </span>
                       <span className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">
                         {template.platform}
                       </span>
@@ -173,20 +206,25 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
                       {formatDate(template.createdAt)}
                     </div>
                   </div>
-                  
+
                   <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2 line-clamp-2">
                     {template.name}
                   </h3>
-                  
+
                   <p className="text-[var(--text-secondary)] text-sm line-clamp-3 mb-4">
                     {template.content || "No description"}
                   </p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {(template.content.match(/\{\{\w+\}\}/g) || []).length > 0 && (
+                      {(template.content.match(/\{\{\w+\}\}/g) || []).length >
+                        0 && (
                         <span className="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded-full">
-                          {(template.content.match(/\{\{\w+\}\}/g) || []).length} placeholders
+                          {
+                            (template.content.match(/\{\{\w+\}\}/g) || [])
+                              .length
+                          }{" "}
+                          placeholders
                         </span>
                       )}
                     </div>
@@ -213,18 +251,28 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
                     onClick={() => setSelectedTemplate(null)}
                     className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
-                
+
                 <div className="mb-4 p-4 border border-[var(--text-secondary)] text-[var(--text-primary)] rounded-lg bg-white dark:bg-[var(--background)]">
                   <pre className="whitespace-pre-wrap text-[var(--text-primary)] font-sans">
                     {selectedTemplate.content}
                   </pre>
                 </div>
-                
+
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <button
                     onClick={() => handleFormat("tone", "casual")}
@@ -251,7 +299,7 @@ export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
                     Bullets
                   </button>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <Link
                     href={`/templates/${selectedTemplate._id}`}
