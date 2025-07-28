@@ -285,7 +285,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 {/* Helpful Tips */}
                 <div className="mt-2 text-sm text-[var(--text-secondary)]">
                   💡 <strong>Pro tip:</strong> Use {`{{placeholder}}`} for parts that change. 
-                  Example: "Hi {`{{firstName}}`}, check out {`{{productName}}`}!"
+                  {`Example: "Hi {{firstName}}, check out {{productName}}!"`}
                 </div>
 
                 {/* Show detected placeholders */}
