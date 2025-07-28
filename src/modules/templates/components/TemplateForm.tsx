@@ -163,14 +163,14 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
       const newSampleData = { ...prev };
       
       // Add new placeholders with smart defaults
-      placeholders.forEach(placeholder => {
+      placeholders.forEach((placeholder: any) => {
         if (!newSampleData[placeholder]) {
           newSampleData[placeholder] = generateSmartDefaults(placeholder, content, platform);
         }
       });
       
       // Remove unused placeholders
-      Object.keys(newSampleData).forEach(key => {
+      Object.keys(newSampleData).forEach((key: any) => {
         if (!placeholders.includes(key)) {
           delete newSampleData[key];
         }
@@ -181,7 +181,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     
     // Generate preview with updated sample data
     setTimeout(() => {
-      setSampleData(currentSampleData => {
+      setSampleData((currentSampleData:any) => {
         debouncedPreview(content, tone, platform, currentSampleData);
         return currentSampleData;
       });
