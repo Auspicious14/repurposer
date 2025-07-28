@@ -288,7 +288,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                   {`Example: "Hi {{firstName}}, check out {{productName}}!"`}
                 </div>
 
-                {/* Show detected placeholders */}
+              
                 {detectedPlaceholders.length > 0 && (
                   <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
@@ -313,14 +313,12 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 )}
               </div>
 
-              {/* Advanced Options - Collapsible */}
               {showAdvanced && (
                 <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                   <h3 className="text-sm font-medium text-[var(--text-primary)] mb-3">
                     Advanced Options
                   </h3>
-                  
-                  {/* Platform */}
+              
                   <div>
                     <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                       Platform *
@@ -340,7 +338,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     </select>
                   </div>
 
-                  {/* Tone Selector */}
                   <ToneSelector
                     selectedTone={values.tone}
                     onToneChange={(tone) => setFieldValue('tone', tone)}
@@ -348,7 +345,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 </div>
               )}
 
-              {/* Sample Data Inputs - Auto-generated */}
               {detectedPlaceholders.length > 0 && (
                 <div className="border-t border-gray-200 dark:border-gray-600 pt-6">
                   <div className="mb-4">
@@ -356,8 +352,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                       Fill in the Details
                     </h3>
                     <p className="text-sm text-[var(--text-secondary)]">
-                      We've automatically created fields for your dynamic parts. 
-                      Edit these to see how your content will look:
+                      {" We've automatically created fields for your dynamic parts. Edit these to see how your content will look:"}
                     </p>
                   </div>
                   <SampleDataInputs
