@@ -1,26 +1,22 @@
+
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Formik, Form, FormikProps } from "formik";
-import * as Yup from "yup";
-import { TextInput } from "@/components/input/TextInput";
-import { useTemplates } from "../context";
-import { PLATFORMS, TONES, VALIDATION_MESSAGES } from "../constants";
-import { SampleDataInputs } from "./SampleDataInputs";
-import { ToneSelector } from "./ToneSelector";
-import { PlaceholderBadges } from "./PlaceholderBadges";
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { TextInput } from '@/components/input/TextInput';
+import { useTemplates } from '../context';
+import { PLATFORMS, TONES } from '../constants';
+import { SampleDataInputs } from './SampleDataInputs';
+import { ToneSelector } from './ToneSelector';
 
 const FormSchema = Yup.object().shape({
-  name: Yup.string().required(VALIDATION_MESSAGES.TEMPLATE_NAME_REQUIRED),
-  platform: Yup.string().required(VALIDATION_MESSAGES.PLATFORM_REQUIRED),
+  name: Yup.string().required('Template name is required'),
+  platform: Yup.string().required('Platform is required'),
   content: Yup.string()
-    .required(VALIDATION_MESSAGES.CONTENT_REQUIRED)
-    .test(
-      "has-placeholders",
-      VALIDATION_MESSAGES.PLACEHOLDERS_REQUIRED,
-      (value) => (value ? /\{\{\w+\}\}/.test(value) : false)
-    ),
-  tone: Yup.string().required(VALIDATION_MESSAGES.TONE_REQUIRED),
+    .required('Content is required')
+    .min(10, 'Content must be at least 10 characters'),
+  tone: Yup.string().required('Please select a tone for preview')
 });
 
 interface FormValues {
@@ -37,12 +33,12 @@ interface TemplateFormProps {
 
 export const TemplateForm: React.FC<TemplateFormProps> = ({
   initialValues = {
-    name: "",
-    platform: "",
-    content: "",
-    tone: "",
+    name: '',
+    platform: '',
+    content: '',
+    tone: 'professional'
   },
-  onSaveSuccess,
+  onSaveSuccess
 }) => {
   const {
     extractPlaceholders,
@@ -50,81 +46,162 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     createTemplate,
     sampleData,
     setSampleData,
-    updateSampleData,
+    updateSampleData
   } = useTemplates();
 
-  const [detectedPlaceholders, setDetectedPlaceholders] = useState<string[]>(
-    []
-  );
-  const [currentFormValues, setCurrentFormValues] =
-    useState<FormValues>(initialValues);
-
-  const prevValuesRef = useRef<{
-    content: string;
-    tone: string;
-    platform: string;
-  }>({ content: "", tone: "", platform: "" });
-
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-
-  const debouncedPreview = useCallback(
-    (
-      content: string,
-      tone: string,
-      platform: string,
-      sampleData: Record<string, string>
-    ) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+  const [detectedPlaceholders, setDetectedPlaceholders] = useState<string[]>([]);
+  const [currentFormValues, setCurrentFormValues] = useState<FormValues>(initialValues);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  
+  const debouncedPreview = useCallback((content: string, tone: string, platform: string, currentSampleData: Record<string, string>) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    timeoutRef.current = setTimeout(() => {
+      if (content.trim() && tone.trim()) {
+        generatePreview({ content, tone, platform, sampleData: currentSampleData })
+          .catch(err => console.error('Preview generation failed:', err));
       }
+    }, 800); 
+  }, [generatePreview]);
 
-      timeoutRef.current = setTimeout(() => {
-        if (content.trim() && tone.trim()) {
-          generatePreview({ content, tone, platform, sampleData }).catch(
-            (err) => console.error("Preview generation failed:", err)
-          );
+  const generateSmartDefaults = useCallback((placeholder: string, content: string, platform: string) => {
+    const lower = placeholder.toLowerCase();
+    
+    const platformDefaults: Record<string, Record<string, string>> = {
+      twitter: {
+        hashtag: 'YourBrand',
+        handle: '@yourbrand',
+        link: 'bit.ly/yourlink'
+      },
+      linkedin: {
+        company: 'Your Company',
+        industry: 'your industry',
+        achievement: 'your recent milestone'
+      },
+      email: {
+        firstname: 'John',
+        lastname: 'Doe',
+        unsubscribe: 'https://yoursite.com/unsubscribe'
+      }
+    };
+
+    const smartDefaults: Record<string, string> = {
+      // Names & Identity
+      name: 'Alex Johnson',
+      firstname: 'Sarah',
+      lastname: 'Chen',
+      fullname: 'Sarah Chen',
+      username: 'sarahc',
+      
+      // Business
+      company: 'Forma',
+      product: 'Your Product',
+      productname: 'Amazing Product',
+      brand: 'Your Brand',
+      service: 'Your Service',
+      
+      // Content
+      title: 'Your Compelling Title Here',
+      headline: 'Grab Attention With This Headline',
+      description: 'A brief description that explains the value you provide',
+      benefit: 'save time and increase productivity',
+      value: 'get better results faster',
+      
+      // Calls to Action
+      cta: 'Get Started Now',
+      ctabutton: 'Click Here',
+      ctalink: 'https://yoursite.com/signup',
+      link: 'https://yoursite.com',
+      
+      // Dates & Numbers
+      date: new Date().toLocaleDateString(),
+      launchdate: 'Next Monday',
+      deadline: 'This Friday',
+      price: '$99',
+      discount: '20% off',
+      
+      // Social
+      hashtag: 'YourBrand',
+      handle: '@yourbrand',
+      
+      // Contact
+      email: 'hello@yourcompany.com',
+      phone: '(555) 123-4567',
+      website: 'yourwebsite.com'
+    };
+
+    // Check platform-specific first
+    if (platformDefaults[platform]?.[lower]) {
+      return platformDefaults[platform][lower];
+    }
+
+    // Check smart defaults
+    if (smartDefaults[lower]) {
+      return smartDefaults[lower];
+    }
+
+    // Fallback to formatted placeholder name
+    return placeholder
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim() || `Your ${placeholder}`;
+  }, []);
+
+  const handleContentChange = useCallback((content: string, tone: string, platform: string) => {
+    const placeholders = extractPlaceholders(content);
+    setDetectedPlaceholders(placeholders);
+    
+    setSampleData(prev => {
+      const newSampleData = { ...prev };
+      
+      // Add new placeholders with smart defaults
+      placeholders.forEach(placeholder => {
+        if (!newSampleData[placeholder]) {
+          newSampleData[placeholder] = generateSmartDefaults(placeholder, content, platform);
         }
-      }, 500);
-    },
-    [generatePreview]
-  );
-
-  const handleContentChange = useCallback(
-    (content: string, tone: string, platform: string) => {
-      const placeholders = extractPlaceholders(content);
-      setDetectedPlaceholders(placeholders);
-
-      setSampleData((prev: any) => {
-        const newSampleData = { ...prev };
-        placeholders.forEach((placeholder) => {
-          if (!newSampleData[placeholder]) {
-            newSampleData[placeholder] = "";
-          }
-        });
-        return newSampleData;
       });
-
-      debouncedPreview(content, tone, platform, sampleData);
-    },
-    [extractPlaceholders, setSampleData, debouncedPreview, sampleData]
-  );
+      
+      // Remove unused placeholders
+      Object.keys(newSampleData).forEach(key => {
+        if (!placeholders.includes(key)) {
+          delete newSampleData[key];
+        }
+      });
+      
+      return newSampleData;
+    });
+    
+    // Generate preview with updated sample data
+    setTimeout(() => {
+      setSampleData(currentSampleData => {
+        debouncedPreview(content, tone, platform, currentSampleData);
+        return currentSampleData;
+      });
+    }, 0);
+    
+  }, [extractPlaceholders, setSampleData, debouncedPreview, generateSmartDefaults]);
 
   useEffect(() => {
     const { content, tone, platform } = currentFormValues;
-    const prevValues = prevValuesRef.current;
-
-    if (
-      content !== prevValues.content ||
-      tone !== prevValues.tone ||
-      platform !== prevValues.platform
-    ) {
-      prevValuesRef.current = { content, tone, platform };
-
-      if (content && tone) {
-        handleContentChange(content, tone, platform);
-      }
+    
+    if (content.trim()) {
+      handleContentChange(content, tone, platform);
+    } else {
+      setDetectedPlaceholders([]);
+      setSampleData({});
     }
-  }, [currentFormValues, handleContentChange]);
+  }, [currentFormValues, handleContentChange, setSampleData]);
+
+  useEffect(() => {
+    const { content, tone, platform } = currentFormValues;
+    if (content.trim() && tone.trim() && Object.keys(sampleData).length > 0) {
+      debouncedPreview(content, tone, platform, sampleData);
+    }
+  }, [sampleData, currentFormValues, debouncedPreview]);
 
   useEffect(() => {
     return () => {
@@ -139,31 +216,40 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
       const templateData = {
         name: values.name,
         platform: values.platform,
-        content: values.content,
+        content: values.content
       };
-
+      
       await createTemplate(templateData);
-
+      
       if (onSaveSuccess) {
         onSaveSuccess(templateData);
       }
     } catch (error) {
-      console.error("Failed to save template:", error);
+      console.error('Failed to save template:', error);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleFormValuesChange = (values: FormValues) => {
+  const handleFormValuesChange = useCallback((values: FormValues) => {
     setCurrentFormValues(values);
-  };
+  }, []);
 
   return (
     <div className="card p-6 rounded-xl shadow-lg">
-      <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-6">
-        Template Configuration
-      </h2>
-
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+          Create Template
+        </h2>
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+        >
+          {showAdvanced ? 'Hide' : 'Show'} Advanced Options
+        </button>
+      </div>
+      
       <Formik
         initialValues={initialValues}
         validationSchema={FormSchema}
@@ -171,65 +257,119 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         enableReinitialize
       >
         {({ values, setFieldValue, isSubmitting }) => {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useMemo(() => {
             handleFormValuesChange(values);
           }, [values, handleFormValuesChange]);
 
           return (
             <Form className="space-y-6">
+              {/* Template Name */}
               <TextInput
                 name="name"
                 label="Template Name"
-                placeholder="e.g., Twitter Product Launch"
+                placeholder="e.g., Product Launch Post, Weekly Newsletter"
                 required
               />
 
-              <div>
-                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
-                  Platform *
-                </label>
-                <select
-                  name="platform"
-                  value={values.platform}
-                  onChange={(e) => setFieldValue("platform", e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
-                >
-                  <option value="">Select Platform</option>
-                  {PLATFORMS.map((platform) => (
-                    <option key={platform.value} value={platform.value}>
-                      {platform.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Main Content - The Key Input */}
               <div>
                 <TextInput
                   name="content"
                   type="textarea"
-                  label="Template Content"
-                  placeholder="Enter your template with placeholders like {{title}}, {{body}}, {{cta}}..."
-                  rows={6}
+                  label="Your Content"
+                  placeholder="Write your content here... Use {{placeholders}} for dynamic parts like {{productName}} or {{customerName}}"
+                  rows={8}
                   required
                 />
+                
+                {/* Helpful Tips */}
+                <div className="mt-2 text-sm text-[var(--text-secondary)]">
+                  💡 <strong>Pro tip:</strong> Use {`{{placeholder}}`} for parts that change. 
+                  Example: "Hi {`{{firstName}}`}, check out {`{{productName}}`}!"
+                </div>
 
-                <PlaceholderBadges placeholders={detectedPlaceholders} />
+                {/* Show detected placeholders */}
+                {detectedPlaceholders.length > 0 && (
+                  <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                        Found {detectedPlaceholders.length} dynamic part{detectedPlaceholders.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {detectedPlaceholders.map(placeholder => (
+                        <span
+                          key={placeholder}
+                          className="inline-flex items-center px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs rounded-full font-medium"
+                        >
+                          {`{{${placeholder}}}`}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <ToneSelector
-                selectedTone={values.tone}
-                onToneChange={(tone) => setFieldValue("tone", tone)}
-              />
+              {/* Advanced Options - Collapsible */}
+              {showAdvanced && (
+                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-[var(--text-primary)] mb-3">
+                    Advanced Options
+                  </h3>
+                  
+                  {/* Platform */}
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                      Platform *
+                    </label>
+                    <select
+                      name="platform"
+                      value={values.platform}
+                      onChange={(e) => setFieldValue('platform', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                    >
+                      <option value="">Select Platform</option>
+                      {PLATFORMS.map(platform => (
+                        <option key={platform.value} value={platform.value}>
+                          {platform.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              {detectedPlaceholders.length > 0 && (
-                <SampleDataInputs
-                  placeholders={detectedPlaceholders}
-                  sampleData={sampleData}
-                  onSampleDataChange={updateSampleData}
-                />
+                  {/* Tone Selector */}
+                  <ToneSelector
+                    selectedTone={values.tone}
+                    onToneChange={(tone) => setFieldValue('tone', tone)}
+                  />
+                </div>
               )}
 
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+              {/* Sample Data Inputs - Auto-generated */}
+              {detectedPlaceholders.length > 0 && (
+                <div className="border-t border-gray-200 dark:border-gray-600 pt-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">
+                      Fill in the Details
+                    </h3>
+                    <p className="text-sm text-[var(--text-secondary)]">
+                      We've automatically created fields for your dynamic parts. 
+                      Edit these to see how your content will look:
+                    </p>
+                  </div>
+                  <SampleDataInputs
+                    placeholders={detectedPlaceholders}
+                    sampleData={sampleData}
+                    onSampleDataChange={updateSampleData}
+                  />
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <div className="pt-6 border-t border-gray-200 dark:border-gray-600">
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -237,29 +377,14 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
-                      <svg
-                        className="w-4 h-4 animate-spin"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      Saving Template...
+                      Creating Template...
                     </span>
                   ) : (
-                    "Save Template"
+                    'Create Template'
                   )}
                 </button>
               </div>
