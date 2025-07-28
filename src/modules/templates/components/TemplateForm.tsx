@@ -57,7 +57,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
   const [currentFormValues, setCurrentFormValues] = useState<FormValues>(initialValues);
   const [showAdvanced, setShowAdvanced] = useState(false);
   
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   
   const debouncedPreview = useCallback((content: string, tone: string, platform: string, currentSampleData: Record<string, string>) => {
     if (timeoutRef.current) {
