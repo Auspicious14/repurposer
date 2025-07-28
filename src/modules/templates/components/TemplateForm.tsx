@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '@/components/input/TextInput';
 import { useTemplates } from '../context';
@@ -22,13 +22,15 @@ const FormSchema = Yup.object().shape({
   tone: Yup.string().required(VALIDATION_MESSAGES.TONE_REQUIRED)
 });
 
+interface FormValues {
+  name: string;
+  platform: string;
+  content: string;
+  tone: string;
+}
+
 interface TemplateFormProps {
-  initialValues?: {
-    name: string;
-    platform: string;
-    content: string;
-    tone: string;
-  };
+  initialValues?: FormValues;
   onSaveSuccess?: (template: any) => void;
 }
 
@@ -51,40 +53,34 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
   } = useTemplates();
 
   const [detectedPlaceholders, setDetectedPlaceholders] = useState<string[]>([]);
-  const [isPreviewGenerated, setIsPreviewGenerated] = useState(false);
+  const [currentFormValues, setCurrentFormValues] = useState<FormValues>(initialValues);
   
-  // Use refs to track previous values and prevent unnecessary calls
   const prevValuesRef = useRef<{
     content: string;
     tone: string;
     platform: string;
   }>({ content: '', tone: '', platform: '' });
 
-  // Debounced preview generation using useCallback and useRef
   const timeoutRef = useRef<NodeJS.Timeout>();
   
   const debouncedPreview = useCallback((content: string, tone: string, platform: string, sampleData: Record<string, string>) => {
-    // Clear existing timeout
+  
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    
-    // Set new timeout
+
     timeoutRef.current = setTimeout(() => {
       if (content.trim() && tone.trim()) {
         generatePreview({ content, tone, platform, sampleData })
-          .then(() => setIsPreviewGenerated(true))
           .catch(err => console.error('Preview generation failed:', err));
       }
     }, 500);
   }, [generatePreview]);
-
-  // Handle content change and placeholder detection
+  
   const handleContentChange = useCallback((content: string, tone: string, platform: string) => {
     const placeholders = extractPlaceholders(content);
     setDetectedPlaceholders(placeholders);
     
-    // Update sample data to include new placeholders with default values
     setSampleData(prev => {
       const newSampleData = { ...prev };
       placeholders.forEach(placeholder => {
@@ -95,35 +91,28 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
       return newSampleData;
     });
     
-    // Trigger debounced preview
     debouncedPreview(content, tone, platform, sampleData);
   }, [extractPlaceholders, setSampleData, debouncedPreview, sampleData]);
 
-  // Effect to handle form value changes (moved outside Formik)
-  const handleFormChange = useCallback((values: any) => {
-    const { content, tone, platform } = values;
+
+  useEffect(() => {
+    const { content, tone, platform } = currentFormValues;
     const prevValues = prevValuesRef.current;
     
-    // Only update if values actually changed
     if (
       content !== prevValues.content || 
       tone !== prevValues.tone || 
       platform !== prevValues.platform
     ) {
-      // Update ref with new values
+  
       prevValuesRef.current = { content, tone, platform };
       
-      // Only handle content change if content and tone are present
       if (content && tone) {
-        // Use setTimeout to defer the state update to avoid render conflicts
-        setTimeout(() => {
-          handleContentChange(content, tone, platform);
-        }, 0);
+        handleContentChange(content, tone, platform);
       }
     }
-  }, [handleContentChange]);
+  }, [currentFormValues, handleContentChange]);
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -132,7 +121,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     };
   }, []);
 
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+  const handleSubmit = async (values: FormValues, { setSubmitting }: any) => {
     try {
       const templateData = {
         name: values.name,
@@ -152,6 +141,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     }
   };
 
+  const handleFormValuesChange = useCallback((values: FormValues) => {
+    setCurrentFormValues(values);
+  }, []);
+
   return (
     <div className="card p-6 rounded-xl shadow-lg">
       <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-6">
@@ -165,22 +158,21 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         enableReinitialize
       >
         {({ values, setFieldValue, isSubmitting }) => {
-          // Call handleFormChange when values change, but defer it
-          React.useEffect(() => {
-            handleFormChange(values);
-          }, [values.content, values.tone, values.platform, handleFormChange]);
+          
+          React.useMemo(() => {
+            handleFormValuesChange(values);
+          }, [values, handleFormValuesChange]);
 
           return (
             <Form className="space-y-6">
-              {/* Template Name */}
+          
               <TextInput
                 name="name"
                 label="Template Name"
                 placeholder="e.g., Twitter Product Launch"
                 required
               />
-
-              {/* Platform */}
+              
               <div>
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                   Platform *
@@ -198,9 +190,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     </option>
                   ))}
                 </select>
-              </div>
-
-              {/* Template Content */}
+              
               <div>
                 <TextInput
                   name="content"
@@ -211,18 +201,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                   required
                 />
                 
-                {/* Detected Placeholders */}
                 <PlaceholderBadges placeholders={detectedPlaceholders} />
               </div>
 
-              {/* Tone Selector */}
               <ToneSelector
                 selectedTone={values.tone}
                 onToneChange={(tone) => setFieldValue('tone', tone)}
               />
 
-              {/* Sample Data Inputs */}
-              {detectedPlaceholders.length > 0 && (
+                {detectedPlaceholders.length > 0 && (
                 <SampleDataInputs
                   placeholders={detectedPlaceholders}
                   sampleData={sampleData}
@@ -230,7 +217,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 />
               )}
 
-              {/* Submit Button */}
               <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
                 <button
                   type="submit"
