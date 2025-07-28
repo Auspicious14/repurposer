@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { TextInput } from '@/components/input/TextInput';
@@ -51,40 +51,86 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
   } = useTemplates();
 
   const [detectedPlaceholders, setDetectedPlaceholders] = useState<string[]>([]);
+  const [isPreviewGenerated, setIsPreviewGenerated] = useState(false);
+  
+  // Use refs to track previous values and prevent unnecessary calls
+  const prevValuesRef = useRef<{
+    content: string;
+    tone: string;
+    platform: string;
+  }>({ content: '', tone: '', platform: '' });
 
-  // Debounced preview generation
-  const debouncedPreview = React.useMemo(
-    () => {
-      let timeout: NodeJS.Timeout;
-      return (content: string, tone: string, platform: string, sampleData: Record<string, string>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          if (content && tone) {
-            generatePreview({ content, tone, platform, sampleData });
-          }
-        }, 500);
-      };
-    },
-    [generatePreview]
-  );
+  // Debounced preview generation using useCallback and useRef
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  
+  const debouncedPreview = useCallback((content: string, tone: string, platform: string, sampleData: Record<string, string>) => {
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Set new timeout
+    timeoutRef.current = setTimeout(() => {
+      if (content.trim() && tone.trim()) {
+        generatePreview({ content, tone, platform, sampleData })
+          .then(() => setIsPreviewGenerated(true))
+          .catch(err => console.error('Preview generation failed:', err));
+      }
+    }, 500);
+  }, [generatePreview]);
 
   // Handle content change and placeholder detection
-  const handleContentChange = (content: string, tone: string, platform: string) => {
+  const handleContentChange = useCallback((content: string, tone: string, platform: string) => {
     const placeholders = extractPlaceholders(content);
     setDetectedPlaceholders(placeholders);
     
     // Update sample data to include new placeholders with default values
-    const newSampleData = { ...sampleData };
-    placeholders.forEach(placeholder => {
-      if (!newSampleData[placeholder]) {
-        newSampleData[placeholder] = '';
-      }
+    setSampleData(prev => {
+      const newSampleData = { ...prev };
+      placeholders.forEach(placeholder => {
+        if (!newSampleData[placeholder]) {
+          newSampleData[placeholder] = '';
+        }
+      });
+      return newSampleData;
     });
-    setSampleData(newSampleData);
     
     // Trigger debounced preview
-    debouncedPreview(content, tone, platform, newSampleData);
-  };
+    debouncedPreview(content, tone, platform, sampleData);
+  }, [extractPlaceholders, setSampleData, debouncedPreview, sampleData]);
+
+  // Effect to handle form value changes (moved outside Formik)
+  const handleFormChange = useCallback((values: any) => {
+    const { content, tone, platform } = values;
+    const prevValues = prevValuesRef.current;
+    
+    // Only update if values actually changed
+    if (
+      content !== prevValues.content || 
+      tone !== prevValues.tone || 
+      platform !== prevValues.platform
+    ) {
+      // Update ref with new values
+      prevValuesRef.current = { content, tone, platform };
+      
+      // Only handle content change if content and tone are present
+      if (content && tone) {
+        // Use setTimeout to defer the state update to avoid render conflicts
+        setTimeout(() => {
+          handleContentChange(content, tone, platform);
+        }, 0);
+      }
+    }
+  }, [handleContentChange]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
@@ -119,15 +165,13 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         enableReinitialize
       >
         {({ values, setFieldValue, isSubmitting }) => {
-          // Trigger preview when form values change
-          //useEffect(() => {
-            if (values.content && values.tone) {
-              handleContentChange(values.content, values.tone, values.platform);
-            }
-        //  }, [values.content, values.tone, values.platform]);
+          // Call handleFormChange when values change, but defer it
+          React.useEffect(() => {
+            handleFormChange(values);
+          }, [values.content, values.tone, values.platform, handleFormChange]);
 
           return (
-            <div className="space-y-6">
+            <Form className="space-y-6">
               {/* Template Name */}
               <TextInput
                 name="name"
@@ -191,7 +235,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  onClick={() => handleSubmit(values, { setSubmitting: (val: boolean) => {} })}
                   className="w-full bg-[var(--primary)] text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 >
                   {isSubmitting ? (
@@ -207,7 +250,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                   )}
                 </button>
               </div>
-            </div>
+            </Form>
           );
         }}
       </Formik>
