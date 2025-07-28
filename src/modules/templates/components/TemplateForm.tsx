@@ -159,7 +159,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     const placeholders = extractPlaceholders(content);
     setDetectedPlaceholders(placeholders);
     
-    setSampleData(prev => {
+    setSampleData((prev: any) => {
       const newSampleData = { ...prev };
       
       // Add new placeholders with smart defaults
