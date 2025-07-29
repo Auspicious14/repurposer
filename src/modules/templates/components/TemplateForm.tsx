@@ -271,7 +271,6 @@
 //   );
 // };
 
-// modules/templates/components/TemplateForm.tsx
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
@@ -279,7 +278,14 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { TextInput } from "@/components/input/TextInput";
 import { useTemplates } from "../context";
-import { PLATFORMS, TONES, VALIDATION_MESSAGES } from "../constants";
+import {
+  DEFAULT_SAMPLES,
+  EXAMPLE_TEMPLATES,
+  PLATFORMS,
+  TEMPLATE_PLACEHOLDER_CONTENT,
+  TONES,
+  VALIDATION_MESSAGES,
+} from "../constants";
 import { SampleDataInputs } from "./SampleDataInputs";
 import { ToneSelector } from "./ToneSelector";
 import { PlaceholderBadges } from "./PlaceholderBadges";
@@ -290,40 +296,6 @@ const FormSchema = Yup.object().shape({
   content: Yup.string().required(VALIDATION_MESSAGES.CONTENT_REQUIRED),
   tone: Yup.string().required(VALIDATION_MESSAGES.TONE_REQUIRED),
 });
-
-// Multiple example templates for different use cases
-const EXAMPLE_TEMPLATES = [
-  {
-    name: "Product Launch",
-    content:
-      "🚀 Hey {{firstName}}!\n\nExcited to share {{productName}} with you - it's designed to help you {{benefit}}.\n\n✨ Key features:\n• {{feature1}}\n• {{feature2}}\n\nReady to get started? {{cta}} 👉 {{link}}\n\nBest regards,\n{{yourName}}",
-  },
-  {
-    name: "Event Invitation",
-    content:
-      "🎉 You're invited to {{eventName}}!\n\n📅 When: {{date}} at {{time}}\n📍 Where: {{location}}\n\n{{eventDescription}}\n\n{{specialNote}}\n\nRSVP by {{deadline}}: {{rsvpLink}}\n\nHope to see you there!\n{{organizerName}}",
-  },
-  {
-    name: "Newsletter",
-    content:
-      "Hi {{firstName}},\n\nWelcome to this week's {{newsletterName}}!\n\n📈 This week's highlight:\n{{mainStory}}\n\n🔥 What's trending:\n• {{trend1}}\n• {{trend2}}\n• {{trend3}}\n\n💡 Quick tip: {{tip}}\n\nThat's all for now. Questions? Just reply!\n\n{{senderName}}",
-  },
-  {
-    name: "Thank You Message",
-    content:
-      "Dear {{customerName}},\n\nThank you for {{action}}! We truly appreciate your {{supportType}}.\n\n{{personalMessage}}\n\nAs a token of our appreciation, here's {{reward}}: {{rewardDetails}}\n\nWe're grateful to have you as part of our {{community}}.\n\nWarm regards,\n{{teamName}}",
-  },
-  {
-    name: "Job Posting",
-    content:
-      "🚀 We're hiring a {{jobTitle}}!\n\n🏢 Company: {{companyName}}\n📍 Location: {{location}}\n💰 Salary: {{salaryRange}}\n\nWhat you'll do:\n• {{responsibility1}}\n• {{responsibility2}}\n• {{responsibility3}}\n\nWhat we're looking for:\n• {{requirement1}}\n• {{requirement2}}\n\nInterested? Apply here: {{applicationLink}}\n\n#{{hashtag}} #Hiring",
-  },
-  {
-    name: "Social Media Post",
-    content:
-      "{{hook}} 🤔\n\nHere's what I learned about {{topic}}:\n\n{{insight1}} ✨\n{{insight2}} 💡\n{{insight3}} 🎯\n\n{{callToAction}}\n\nWhat's your experience with {{topic}}? Share below! 👇\n\n#{{hashtag1}} #{{hashtag2}}",
-  },
-];
 
 interface FormValues {
   name: string;
@@ -362,77 +334,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
   const [showExamples, setShowExamples] = useState(false);
   const [formValues, setFormValues] = useState<FormValues>(initialValues);
 
-  // Debounce refs
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  // Generate smart defaults for placeholders
   const getSmartDefault = useCallback((placeholder: string) => {
-    const defaults: Record<string, string> = {
-      // Personal
-      firstName: "Sarah",
-      lastname: "Johnson",
-      name: "John Smith",
-      customerName: "Alex Chen",
-      yourName: "Your Name",
-      senderName: "Mike Johnson",
-      organizerName: "Event Team",
-      teamName: "Our Team",
-
-      // Business
-      companyName: "Amazing Company",
-      productName: "Super Product",
-      eventName: "Annual Conference",
-      jobTitle: "Senior Developer",
-      newsletterName: "Weekly Insights",
-
-      // Content
-      benefit: "save time and boost productivity",
-      hook: "Ever wondered why some people succeed faster?",
-      topic: "productivity",
-      mainStory: "New AI tools are changing how we work",
-      personalMessage: "Your support means the world to us",
-
-      // Details
-      feature1: "Lightning-fast performance",
-      feature2: "Easy to use interface",
-      trend1: "AI automation tools",
-      trend2: "Remote work solutions",
-      trend3: "Productivity apps",
-      responsibility1: "Build amazing features",
-      responsibility2: "Collaborate with the team",
-      requirement1: "3+ years experience",
-      requirement2: "Strong problem-solving skills",
-
-      // Action
-      cta: "Get started today",
-      callToAction: "What do you think?",
-      action: "choosing our service",
-
-      // Links & Contact
-      link: "https://example.com",
-      rsvpLink: "https://event.com/rsvp",
-      applicationLink: "https://jobs.com/apply",
-
-      // Dates & Times
-      date: "Friday, Dec 15th",
-      time: "3:00 PM EST",
-      deadline: "Monday",
-
-      // Locations
-      location: "New York City",
-      community: "customer family",
-
-      // Rewards & Values
-      reward: "a special discount",
-      rewardDetails: "20% off your next order",
-      salaryRange: "$80k - $120k",
-      supportType: "continued trust",
-
-      // Social
-      hashtag: "YourBrand",
-      hashtag1: "Productivity",
-      hashtag2: "Success",
-    };
+    const defaults = DEFAULT_SAMPLES;
 
     return (
       defaults[placeholder] ||
@@ -440,7 +345,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     );
   }, []);
 
-  // Immediate preview function (no debounce for instant feedback)
   const triggerPreview = useCallback(
     (
       content: string,
@@ -460,7 +364,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     [generatePreview]
   );
 
-  // Debounced preview for typing
   const debouncedPreview = useCallback(
     (
       content: string,
@@ -474,40 +377,34 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
       timeoutRef.current = setTimeout(() => {
         triggerPreview(content, tone, platform, currentSampleData);
-      }, 300); // Reduced from 500ms
+      }, 300);
     },
     [triggerPreview]
   );
 
-  // Handle content changes
   const handleContentChange = useCallback(
     (content: string, tone?: string, platform?: string, immediate = false) => {
       const currentTone = tone || formValues.tone;
       const currentPlatform = platform || formValues.platform;
 
-      // Extract placeholders
       const placeholders = extractPlaceholders(content);
       setDetectedPlaceholders(placeholders);
 
-      // Update sample data
       setSampleData((prev: any) => {
         const newData = { ...prev };
 
-        // Add new placeholders with smart defaults
         placeholders.forEach((placeholder) => {
           if (!newData[placeholder]) {
             newData[placeholder] = getSmartDefault(placeholder);
           }
         });
 
-        // Remove old placeholders
         Object.keys(newData).forEach((key) => {
           if (!placeholders.includes(key)) {
             delete newData[key];
           }
         });
 
-        // Trigger preview with updated data
         if (content.trim() && currentTone.trim()) {
           if (immediate) {
             triggerPreview(content, currentTone, currentPlatform, newData);
@@ -530,7 +427,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     ]
   );
 
-  // Handle immediate changes (tone, platform switches)
   const handleImmediateChange = useCallback(
     (field: keyof FormValues, value: string) => {
       const newFormValues = { ...formValues, [field]: value };
@@ -548,12 +444,10 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     [formValues, triggerPreview, sampleData]
   );
 
-  // Handle sample data changes with immediate preview
   const handleSampleDataChange = useCallback(
     (key: string, value: string) => {
       updateSampleData(key, value);
 
-      // Trigger immediate preview
       if (formValues.content.trim() && formValues.tone.trim()) {
         const newSampleData = { ...sampleData, [key]: value };
         triggerPreview(
@@ -567,7 +461,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     [updateSampleData, formValues, triggerPreview, sampleData]
   );
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -637,7 +530,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
           </button>
         </div>
       </div>
-      {/* Examples Section */}
       {showExamples && (
         <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-3">
@@ -671,7 +563,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         enableReinitialize
       >
         {({ values, setFieldValue, isSubmitting }) => {
-          // Sync form values
           // eslint-disable-next-line react-hooks/rules-of-hooks
           React.useEffect(() => {
             setFormValues(values);
@@ -679,7 +570,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
           return (
             <Form className="space-y-6">
-              {/* Template Name */}
               <TextInput
                 name="name"
                 label="Template Name"
@@ -687,7 +577,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 required
               />
 
-              {/* Platform */}
               <div>
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                   Platform *
@@ -710,7 +599,6 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                 </select>
               </div>
 
-              {/* Main Content */}
               <div>
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                   Your Content *
@@ -723,19 +611,14 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
                     handleContentChange(e.target.value);
                   }}
                   rows={8}
-                  placeholder="Write your content here... 
-
-💡 Pro tip: Use {{placeholders}} for dynamic parts!
-Example: Hi {{firstName}}, check out {{productName}}!"
+                  placeholder={TEMPLATE_PLACEHOLDER_CONTENT}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-vertical"
                   required
                 />
 
-                {/* Show detected placeholders */}
                 <PlaceholderBadges placeholders={detectedPlaceholders} />
               </div>
 
-              {/* Tone Selector - Always visible */}
               <div>
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                   Tone (for preview) *
@@ -761,7 +644,6 @@ Example: Hi {{firstName}}, check out {{productName}}!"
                 </div>
               </div>
 
-              {/* Advanced Tones */}
               {showAdvanced && (
                 <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                   <h3 className="text-sm font-medium text-[var(--text-primary)] mb-3">
@@ -789,7 +671,6 @@ Example: Hi {{firstName}}, check out {{productName}}!"
                 </div>
               )}
 
-              {/* Sample Data Inputs */}
               {detectedPlaceholders.length > 0 && (
                 <div className="border-t border-gray-200 dark:border-gray-600 pt-6">
                   <div className="flex items-center gap-2 mb-4">
@@ -821,7 +702,6 @@ Example: Hi {{firstName}}, check out {{productName}}!"
                 </div>
               )}
 
-              {/* Submit Button */}
               <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
                 <button
                   type="submit"

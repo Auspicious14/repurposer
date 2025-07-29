@@ -3,32 +3,13 @@
 import {
   createContext,
   useState,
-  useEffect,
   useContext,
   ReactNode,
   useCallback,
 } from "react";
-import { useAuth } from "@/modules/auth/context";
 import api from "@/lib/api";
 import { toast } from "sonner";
-
-interface Template {
-  _id: string;
-  name: string;
-  content: string;
-  platform:
-    | "twitter"
-    | "linkedin"
-    | "instagram"
-    | "blog"
-    | "email"
-    | "facebook"
-    | "tiktok";
-  createdBy: string;
-  updatedBy: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { ITemplate } from "./model";
 
 interface PreviewRequest {
   content: string;
@@ -38,8 +19,7 @@ interface PreviewRequest {
 }
 
 interface TemplatesContextType {
-  // Existing template management
-  templates: Template[];
+  templates: ITemplate[];
   error: string | null;
   fetchTemplates: () => Promise<void>;
   createTemplate: (values: {
@@ -47,8 +27,6 @@ interface TemplatesContextType {
     content: string;
     platform: string;
   }) => Promise<void>;
-
-  // Template Builder specific
   previewContent: string;
   isPreviewLoading: boolean;
   previewError: string | null;
@@ -59,10 +37,8 @@ interface TemplatesContextType {
   saveOutput: (outputData?: any) => Promise<void>;
   extractPlaceholders: (content: string) => string[];
   resetPreview: () => void;
-
-  // Additional template operations
-  getTemplate: (id: string) => Promise<Template | null>;
-  updateTemplate: (id: string, data: Partial<Template>) => Promise<void>;
+  getTemplate: (id: string) => Promise<ITemplate | null>;
+  updateTemplate: (id: string, data: Partial<ITemplate>) => Promise<void>;
   deleteTemplate: (id: string) => Promise<void>;
 }
 
@@ -75,17 +51,14 @@ interface TemplatesProviderProps {
 }
 
 export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const [templates, setTemplates] = useState<ITemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
 
-  // Template Builder state
   const [previewContent, setPreviewContent] = useState<string>("");
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [sampleData, setSampleData] = useState<Record<string, string>>({});
 
-  // Fetch templates
   const fetchTemplates = async () => {
     try {
       const res = await api.get("/templates");
@@ -101,7 +74,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  // Create template
   const createTemplate = async (values: {
     name: string;
     content: string;
@@ -125,9 +97,8 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  // Get single template
   const getTemplate = useCallback(
-    async (id: string): Promise<Template | null> => {
+    async (id: string): Promise<ITemplate | null> => {
       try {
         const res = await api.get(`/templates/${id}`);
         if (res.data.success) {
@@ -145,8 +116,7 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     []
   );
 
-  // Update template
-  const updateTemplate = async (id: string, data: Partial<Template>) => {
+  const updateTemplate = async (id: string, data: Partial<ITemplate>) => {
     try {
       const res = await api.put(`/templates/${id}`, data);
       if (res.data.success) {
@@ -167,7 +137,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  // Delete template
   const deleteTemplate = async (id: string) => {
     try {
       const res = await api.delete(`/templates/${id}`);
@@ -185,7 +154,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  // Extract placeholders from content
   const extractPlaceholders = useCallback((content: string): string[] => {
     const matches = content.match(/\{\{(\w+)\}\}/g);
     return matches ? matches.map((match) => match.slice(2, -2)) : [];
@@ -195,7 +163,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     setSampleData((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  // Generate preview with API call
   const generatePreview = async (request: PreviewRequest) => {
     if (!request.content.trim() || !request.tone) {
       setPreviewContent("");
@@ -229,7 +196,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     }
   };
 
-  // Save output
   const saveOutput = useCallback(
     async (outputData?: any) => {
       if (!previewContent && !outputData?.content) {
@@ -262,7 +228,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
     [previewContent, sampleData]
   );
 
-  // Reset preview state
   const resetPreview = useCallback(() => {
     setPreviewContent("");
     setPreviewError(null);
@@ -272,13 +237,10 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
   return (
     <TemplatesContext.Provider
       value={{
-        // Existing
         templates,
         error,
         createTemplate,
         fetchTemplates,
-
-        // Template Builder
         previewContent,
         isPreviewLoading,
         previewError,
@@ -289,8 +251,6 @@ export const TemplatesProvider = ({ children }: TemplatesProviderProps) => {
         saveOutput,
         extractPlaceholders,
         resetPreview,
-
-        // Additional operations
         getTemplate,
         updateTemplate,
         deleteTemplate,

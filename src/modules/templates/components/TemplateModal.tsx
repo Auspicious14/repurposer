@@ -1,16 +1,15 @@
-
 "use client";
 
 import { useEffect } from "react";
 import { Formik, Form } from "formik";
 import { TextInput } from "@/components/input/TextInput";
-import * as Yup from 'yup';
-import { PLATFORMS, VALIDATION_MESSAGES } from '../constants';
+import * as Yup from "yup";
+import { PLATFORMS, VALIDATION_MESSAGES } from "../constants";
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required(VALIDATION_MESSAGES.TEMPLATE_NAME_REQUIRED),
   content: Yup.string().required(VALIDATION_MESSAGES.CONTENT_REQUIRED),
-  platform: Yup.string().required(VALIDATION_MESSAGES.PLATFORM_REQUIRED)
+  platform: Yup.string().required(VALIDATION_MESSAGES.PLATFORM_REQUIRED),
 });
 
 interface TemplateModalProps {
@@ -34,22 +33,21 @@ export const TemplateModal = ({
   onClose,
   onSubmit,
   title,
-  initialValues = { name: "", content: "", platform: "" }
+  initialValues = { name: "", content: "", platform: "" },
 }: TemplateModalProps) => {
-  
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      
+      document.body.style.overflow = "hidden";
+
       const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') onClose();
+        if (e.key === "Escape") onClose();
       };
-      
-      document.addEventListener('keydown', handleEscape);
-      
+
+      document.addEventListener("keydown", handleEscape);
+
       return () => {
-        document.body.style.overflow = 'unset';
-        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = "unset";
+        document.removeEventListener("keydown", handleEscape);
       };
     }
   }, [isOpen, onClose]);
@@ -58,20 +56,20 @@ export const TemplateModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
         aria-hidden="true"
       />
-      
-      <div 
+
+      <div
         className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-2xl transform transition-all duration-300 scale-100 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 rounded-t-2xl">
-          <h2 
+          <h2
             id="modal-title"
             className="text-xl font-semibold text-gray-900 dark:text-white"
           >
@@ -83,13 +81,22 @@ export const TemplateModal = ({
             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
             aria-label="Close modal"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           <Formik
             initialValues={initialValues}
@@ -107,7 +114,6 @@ export const TemplateModal = ({
                   required
                 />
 
-                {/* Platform */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Platform *
@@ -115,11 +121,11 @@ export const TemplateModal = ({
                   <select
                     name="platform"
                     value={values.platform}
-                    onChange={(e) => setFieldValue('platform', e.target.value)}
+                    onChange={(e) => setFieldValue("platform", e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-colors duration-200"
                   >
                     <option value="">Select Platform</option>
-                    {PLATFORMS.map(platform => (
+                    {PLATFORMS.map((platform) => (
                       <option key={platform.value} value={platform.value}>
                         {platform.label}
                       </option>
@@ -127,7 +133,6 @@ export const TemplateModal = ({
                   </select>
                 </div>
 
-                {/* Template Content */}
                 <TextInput
                   name="content"
                   type="textarea"
@@ -136,17 +141,16 @@ export const TemplateModal = ({
                   rows={8}
                   required
                 />
-                
-                {/* Show placeholder count */}
+
                 {values.content && (
                   <div className="mt-2">
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Placeholders found: {(values.content.match(/\{\{\w+\}\}/g) || []).length}
+                      Placeholders found:{" "}
+                      {(values.content.match(/\{\{\w+\}\}/g) || []).length}
                     </p>
                   </div>
                 )}
-                
-                {/* Actions */}
+
                 <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <button
                     type="button"
@@ -163,9 +167,24 @@ export const TemplateModal = ({
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
-                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        <svg
+                          className="w-4 h-4 animate-spin"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
                         </svg>
                         Creating...
                       </span>
