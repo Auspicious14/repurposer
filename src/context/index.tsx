@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 import { AuthContextProvider } from "../modules/auth/context";
 import { ThemeContextProvider } from "./theme";
 import { TemplatesProvider } from "@/modules/templates/context";
+import { HistoryContextProvider } from "@/modules/history/context";
 
 export const combineContext = (...components: FC[]): FC<any> => {
   const CombinedComponent = components.reduce(
@@ -47,5 +48,6 @@ const providers = [
   AuthContextProvider,
   ThemeContextProvider,
   TemplatesProvider,
+  HistoryContextProvider,
 ] as any;
 export const AppContextProvider = combineContext(...providers);

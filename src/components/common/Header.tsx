@@ -48,6 +48,9 @@ export const Header = () => {
         <Link href="/templates" className="hover:text-[var(--primary)]">
           Templates
         </Link>
+        <Link href="/history" className="hover:text-[var(--primary)]">
+          History
+        </Link>
         <Link href="/community" className="hover:text-[var(--primary)]">
           Community
         </Link>
