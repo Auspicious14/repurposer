@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import api from "@/lib/api";
@@ -7,6 +7,8 @@ import LoadingSpinner from "../loader/LoadingSpinner";
 import { OutputFormatSelector } from "./OutputFormatSelector";
 import { TextInput } from "./TextInput";
 import ToneSelector from "../ToneSelector";
+import { PLATFORMS } from "@/modules/templates/constants";
+import { useTemplates } from "@/modules/templates/context";
 
 const FormSchema = Yup.object().shape({
   content: Yup.string().required("Content is required"),
@@ -20,6 +22,12 @@ interface InputFormProps {
 
 export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
   const [loading, setLoading] = useState(false);
+
+  const { fetchTemplates, templates } = useTemplates();
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
 
   const handleSubmit = async (values: {
     content: string;
@@ -59,7 +67,8 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
         content: "",
         formats: ["Twitter"],
         tone: "Professional",
-      }} // Removed hardcoded LinkedIn
+        template: "",
+      }}
       validationSchema={FormSchema}
       onSubmit={handleSubmit}
     >
@@ -99,7 +108,26 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate }) => {
               <p className="text-red-500 text-sm">{errors.formats}</p>
             )}
           </div>
-          {/* Assuming ToneSelector exists */}
+          <div>
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+              Template
+            </label>
+            <select
+              name="template"
+              value={values.template}
+              onChange={(e) => {
+                setFieldValue("template", e.target.value);
+              }}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+            >
+              <option value="">Select Template</option>
+              {templates.map((template) => (
+                <option key={template._id} value={template.name}>
+                  {template.name}
+                </option>
+              ))}
+            </select>
+          </div>{" "}
           <div>
             {/* <h2 className="text-lg font-medium text-[var(--text-primary)]">
               Select Tone
