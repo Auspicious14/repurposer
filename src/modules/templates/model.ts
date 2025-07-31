@@ -1,17 +1,9 @@
 export interface ITemplate {
   _id: string;
   name: string;
+  platform: string;
   content: string;
-  platform:
-    | "twitter"
-    | "linkedin"
-    | "instagram"
-    | "blog"
-    | "email"
-    | "facebook"
-    | "tiktok";
-  createdBy: string;
-  updatedBy: string;
+  placeholders: string[];
+  placeholderCount: number;
   createdAt: string;
-  updatedAt: string;
 }

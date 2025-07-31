@@ -13,6 +13,7 @@ import {
   WhatsappIcon,
   InstapaperIcon,
 } from "react-share";
+import { toast } from "sonner";
 
 // Types for the content history
 interface RepurposedContent {
@@ -44,7 +45,7 @@ interface HistoryFilters {
 export default function HistoryPage() {
   const router = useRouter();
   const { fetchHistory, history, loading } = useHistory();
-  const [contents, setContents] = useState<RepurposedContent[]>([]);
+  // const [contents, setContents] = useState<RepurposedContent[]>([]);
   const [filteredContents, setFilteredContents] = useState<RepurposedContent[]>(
     []
   );
@@ -61,96 +62,14 @@ export default function HistoryPage() {
 
   const itemsPerPage = 12;
 
-  const mockContents: RepurposedContent[] = [
-    {
-      _id: "1",
-      originalContent:
-        "Original template content with {{productName}} and {{benefit}}",
-      repurposedContent:
-        "🚀 Excited to share Forma with you - it helps you save time and increase productivity!\n\n✨ Key features:\n• Lightning-fast performance\n• Easy to use interface\n\nReady to get started? Get started today 👉 https://forma.ai\n\nBest regards,\nMike Johnson",
-      templateId: "template1",
-      templateName: "Product Launch",
-      platform: "twitter",
-      tone: "professional",
-      sampleData: {
-        productName: "Forma",
-        benefit: "save time and increase productivity",
-      },
-      createdAt: "2024-01-15T10:30:00Z",
-      updatedAt: "2024-01-15T10:30:00Z",
-      createdBy: "user1",
-      metadata: {
-        wordCount: 32,
-        characterCount: 180,
-        placeholdersUsed: ["productName", "benefit"],
-      },
-    },
-    {
-      _id: "2",
-      originalContent: "Event invitation for {{eventName}} on {{date}}",
-      repurposedContent:
-        "🎉 You're invited to Annual Conference!\n\n📅 When: Friday, Dec 15th at 3:00 PM EST\n📍 Where: New York City\n\nJoin us for an amazing experience\n\nRSVP by Monday: https://event.com/rsvp\n\nHope to see you there!\nEvent Team",
-      templateId: "template2",
-      templateName: "Event Invitation",
-      platform: "email",
-      tone: "friendly",
-      sampleData: { eventName: "Annual Conference", date: "Friday, Dec 15th" },
-      createdAt: "2024-01-14T15:45:00Z",
-      updatedAt: "2024-01-14T15:45:00Z",
-      createdBy: "user1",
-      metadata: {
-        wordCount: 28,
-        characterCount: 165,
-        placeholdersUsed: ["eventName", "date"],
-      },
-    },
-    {
-      _id: "3",
-      originalContent: "Newsletter content about {{topic}} and {{insight}}",
-      repurposedContent:
-        "Hi Sarah,\n\nWelcome to this week's Weekly Insights!\n\n📈 This week's highlight:\nNew AI tools are changing how we work\n\n🔥 What's trending:\n• AI automation tools\n• Remote work solutions\n• Productivity apps\n\n💡 Quick tip: Focus on one tool at a time\n\nThat's all for now. Questions? Just reply!\n\nMike Johnson",
-      templateId: "template3",
-      templateName: "Newsletter",
-      platform: "email",
-      tone: "informative",
-      sampleData: { topic: "productivity", insight: "AI automation is key" },
-      createdAt: "2024-01-13T09:20:00Z",
-      updatedAt: "2024-01-13T09:20:00Z",
-      createdBy: "user1",
-      metadata: {
-        wordCount: 45,
-        characterCount: 280,
-        placeholdersUsed: ["topic", "insight"],
-      },
-    },
-  ];
-
   useEffect(() => {
     fetchHistory();
-  }, []);
-
-  useEffect(() => {
-    const fetchContents = async () => {
-      // setLoading(true);
-      try {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setContents(mockContents);
-        setFilteredContents(mockContents);
-      } catch (err) {
-        // setError("Failed to fetch content history");
-      } finally {
-        // setLoading(false);
-      }
-    };
-
-    fetchContents();
   }, []);
 
   console.log({ history });
 
   useEffect(() => {
-    let filtered = contents;
+    let filtered = history;
 
     // Apply filters
     if (filters.platform) {
@@ -197,7 +116,7 @@ export default function HistoryPage() {
 
     setFilteredContents(filtered);
     setCurrentPage(1);
-  }, [filters, contents]);
+  }, [filters, history]);
 
   // Pagination
   const totalPages = Math.ceil(filteredContents.length / itemsPerPage);
@@ -258,7 +177,7 @@ export default function HistoryPage() {
 
   const handleCopyContent = (content: string) => {
     navigator.clipboard.writeText(content);
-    // You can add a toast notification here
+    toast.success("Copied");
   };
 
   if (loading) {
@@ -324,10 +243,8 @@ export default function HistoryPage() {
           </div>
         </div>
 
-        {/* Filters */}
         <div className="card p-6 rounded-xl shadow-lg mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-            {/* Search */}
             <div className="flex-1 min-w-0">
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Search Content
@@ -341,7 +258,6 @@ export default function HistoryPage() {
               />
             </div>
 
-            {/* Platform Filter */}
             <div className="w-full lg:w-48">
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Platform
@@ -362,7 +278,6 @@ export default function HistoryPage() {
               </select>
             </div>
 
-            {/* Tone Filter */}
             <div className="w-full lg:w-48">
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Tone
@@ -383,7 +298,6 @@ export default function HistoryPage() {
               </select>
             </div>
 
-            {/* Date Range Filter */}
             <div className="w-full lg:w-48">
               <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Date Range
@@ -402,7 +316,6 @@ export default function HistoryPage() {
               </select>
             </div>
 
-            {/* Clear Filters */}
             <button
               onClick={clearFilters}
               className="px-4 py-3 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200 whitespace-nowrap"
@@ -411,7 +324,6 @@ export default function HistoryPage() {
             </button>
           </div>
 
-          {/* Active Filters Summary */}
           {(filters.platform ||
             filters.tone ||
             filters.dateRange ||
@@ -454,7 +366,6 @@ export default function HistoryPage() {
           )}
         </div>
 
-        {/* Results Summary */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-[var(--text-secondary)]">
             Showing {paginatedContents.length} of {filteredContents.length}{" "}
@@ -465,7 +376,6 @@ export default function HistoryPage() {
           </div>
         </div>
 
-        {/* Content Grid */}
         {filteredContents.length === 0 ? (
           <div className="text-center py-12">
             <div className="max-w-md mx-auto">
@@ -533,7 +443,6 @@ export default function HistoryPage() {
                   </span>
                 </div>
 
-                {/* Content Preview */}
                 <div className="mb-4">
                   <p className="text-[var(--text-primary)] text-sm line-clamp-4 mb-2">
                     {content.repurposedContent}
@@ -552,7 +461,6 @@ export default function HistoryPage() {
                   )}
                 </div>
 
-                {/* Placeholders Used */}
                 {content.metadata?.placeholdersUsed &&
                   content.metadata.placeholdersUsed.length > 0 && (
                     <div className="mb-4">
@@ -576,7 +484,6 @@ export default function HistoryPage() {
                     </div>
                   )}
 
-                {/* Footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
                   <div className="text-xs text-[var(--text-secondary)]">
                     {formatDate(content.createdAt)}
@@ -638,7 +545,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center mt-8 gap-2">
             <button
@@ -687,7 +593,11 @@ export default function HistoryPage() {
               <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">
-                    {getPlatformIcon(selectedContent.platform) as string}
+                    {
+                      getPlatformIcon(
+                        selectedContent.platform
+                      ) as React.ReactNode
+                    }
                   </span>
                   <div>
                     <h2 className="text-xl font-semibold text-[var(--text-primary)]">
