@@ -9,7 +9,7 @@ import { TemplateModal } from "./components/TemplateModal";
 
 
 interface TemplatesPageProps {
-  onSelectTemplate?: (template: Template) => void;
+  onSelectTemplate?: (template: ITemplate) => void;
 }
 
 export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
