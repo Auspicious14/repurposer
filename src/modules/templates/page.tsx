@@ -4,25 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTemplates } from "./context";
+import { ITemplate } from "./model";
 import { TemplateModal } from "./components/TemplateModal";
 
-interface Template {
-  _id: string;
-  name: string;
-  content: string;
-  platform:
-    | "twitter"
-    | "linkedin"
-    | "instagram"
-    | "blog"
-    | "email"
-    | "facebook"
-    | "tiktok";
-  createdBy: string;
-  updatedBy: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface TemplatesPageProps {
   onSelectTemplate?: (template: Template) => void;
@@ -30,7 +14,7 @@ interface TemplatesPageProps {
 
 export const TemplatesPage = ({ onSelectTemplate }: TemplatesPageProps) => {
   const router = useRouter();
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+  const [selectedTemplate, setSelectedTemplate] = useState<ITemplate | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
