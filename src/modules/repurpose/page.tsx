@@ -46,6 +46,7 @@ import { SelectPlatform } from "./components/selectPlatform";
 import { SelectTone } from "./components/selectTone";
 import { DisplayResults } from "./components/result";
 import { SelectTemplate } from "./components/selectTemplate";
+import { PLATFORMS } from "@/utils/constants";
 
 const validationSchema = Yup.object().shape({
   directContent: Yup.string().when("useTemplate", {
@@ -183,8 +184,8 @@ export const DashboardPage = () => {
             transcribe: "",
             directContent: "",
             templateData: { placeholder: "", value: "" },
-            platforms: ["twitter", "linkedin"],
-            tone: "professional",
+            platforms: PLATFORMS.slice(0, 2).map((platform) => platform.value),
+            tone: "Professional",
             useTemplate: false,
             selectedTemplate: templates[0] as ITemplate,
           }}

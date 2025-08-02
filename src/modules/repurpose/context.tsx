@@ -34,6 +34,7 @@ export const TranscribeContextProvider: React.FC<IProps> = ({ children }) => {
   const [results, setResults] = useState<PlatformResult[]>([]);
 
   const transcribe = async (payload: ITranscribePayload) => {
+    setLoading(true);
     try {
       const response = await api.post("/repurpose", payload);
       const data = response?.data?.data;
