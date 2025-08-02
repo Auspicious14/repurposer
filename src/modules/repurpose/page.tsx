@@ -45,6 +45,7 @@ import { PLATFORMS, TONES } from "@/utils/constants";
 import { TextInput } from "@/components/input/TextInput";
 import * as Yup from "yup";
 import { SelectPlatform } from "./components/selectPlatform";
+import { SelectTone } from "./components/selectTone";
 
 export const DashboardPage = () => {
   const router = useRouter();
