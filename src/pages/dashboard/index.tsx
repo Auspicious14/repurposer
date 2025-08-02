@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
-import { DashboardPage } from "@/modules/dashboard/page";
-import { withProtectedAuth } from "@/utils/auth"
+import { DashboardPage } from "@/modules/repurpose/page";
+import { withProtectedAuth } from "@/utils/auth";
 
 export default function Dashboard() {
   return <DashboardPage />;

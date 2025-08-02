@@ -4,6 +4,7 @@ import { AuthContextProvider } from "../modules/auth/context";
 import { ThemeContextProvider } from "./theme";
 import { TemplatesProvider } from "@/modules/templates/context";
 import { HistoryContextProvider } from "@/modules/history/context";
+import { TranscribeContextProvider } from "@/modules/repurpose/context";
 
 export const combineContext = (...components: FC[]): FC<any> => {
   const CombinedComponent = components.reduce(
@@ -49,5 +50,6 @@ const providers = [
   ThemeContextProvider,
   TemplatesProvider,
   HistoryContextProvider,
+  TranscribeContextProvider,
 ] as any;
 export const AppContextProvider = combineContext(...providers);
