@@ -84,27 +84,9 @@ export const DashboardPage = () => {
     template.placeholders.forEach((placeholder) => {
       initialData[placeholder] = "";
     });
-    // setTemplateData(initialData);
   };
 
-  // Handle template data change
-  // const handleTemplateDataChange = (placeholder: string, value: string) => {
-  //   setTemplateData((prev) => ({
-  //     ...prev,
-  //     [placeholder]: value,
-  //   }));
-  // };
 
-  // Handle platform toggle
-  // const handlePlatformToggle = (platform: string) => {
-  //   setSelectedPlatforms((prev) =>
-  //     prev.includes(platform)
-  //       ? prev.filter((p) => p !== platform)
-  //       : [...prev, platform]
-  //   );
-  // };
-
-  // Handle form submission
   const handleSubmit = async (values: any) => {
     if (values.platforms.length === 0) {
       toast.error("Please select at least one platform");
@@ -262,6 +244,7 @@ export const DashboardPage = () => {
                 {!values.useTemplate && (
                   <div>
                     <TextInput
+                      type="textarea"
                       label="Your Content *"
                       name={"directContent"}
                       rows={6}
