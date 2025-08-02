@@ -44,6 +44,7 @@ import { Form, Formik } from "formik";
 import { PLATFORMS, TONES } from "@/utils/constants";
 import { TextInput } from "@/components/input/TextInput";
 import * as Yup from "yup";
+import { SelectPlatform } from "./components/selectPlatform";
 
 export const DashboardPage = () => {
   const router = useRouter();
@@ -261,7 +262,7 @@ export const DashboardPage = () => {
                 {!values.useTemplate && (
                   <div>
                     <TextInput
-                      label="                      Your Content *"
+                      label="Your Content *"
                       name={"directContent"}
                       rows={6}
                       placeholder="Enter your content here... This will be repurposed for the selected platforms and tone."
@@ -389,41 +390,18 @@ export const DashboardPage = () => {
               </div>
 
               {/* Platform Selection */}
-              <div className="card p-6 rounded-xl shadow-lg">
-                <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-                  Target Platforms
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                  {PLATFORMS.map((platform) => (
-                    <button
-                      key={platform?.value}
-                      type="button"
-                      onClick={() =>
-                        setFieldValue(
-                          "platforms",
-                          values.platforms.includes(platform.value)
-                            ? values.platforms.filter(
-                                (p) => p !== platform.value
-                              )
-                            : [...values.platforms, platform.value]
-                        )
-                      }
-                      className={`p-3 rounded-lg border-2 transition-all duration-200 ${
-                        values.platforms.includes(platform.value)
-                          ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                          : "border-gray-300 dark:border-gray-600 hover:border-[var(--primary)]/50"
-                      }`}
-                    >
-                      <div className="text-center">
-                        <div className="text-xl mb-1">{platform.icon}</div>
-                        <div className="text-xs font-medium text-[var(--text-primary)]">
-                          {platform.label}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+
+              <SelectPlatform
+                platforms={values.platforms}
+                onClick={(platform) =>
+                  setFieldValue(
+                    "platforms",
+                    values.platforms.includes(platform)
+                      ? values.platforms.filter((p) => p !== platform)
+                      : [...values.platforms, platform]
+                  )
+                }
+              />
 
               {/* Tone Selection */}
               <div className="card p-6 rounded-xl shadow-lg">
