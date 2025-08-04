@@ -73,12 +73,9 @@ export default function HistoryPage() {
     fetchHistory();
   }, []);
 
-  console.log({ history });
-
   useEffect(() => {
     let filtered = history;
 
-    // Apply filters
     if (filters.platform) {
       filtered = filtered.filter(
         (content) => content.platform === filters.platform
@@ -125,7 +122,6 @@ export default function HistoryPage() {
     setCurrentPage(1);
   }, [filters, history]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredContents.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedContents = filteredContents.slice(
@@ -736,7 +732,7 @@ export default function HistoryPage() {
                       {selectedContent.repurposedContent}
                     </pre>
                   </div>
-                  <div className="flex justify-end mt-2">
+                  <div className="flex gap-4 items-center justify-end mt-2">
                     <button
                       onClick={() =>
                         handleCopyContent(selectedContent.repurposedContent)
@@ -744,6 +740,11 @@ export default function HistoryPage() {
                       className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-all duration-200 text-sm font-medium"
                     >
                       Copy Content
+                    </button>
+                    <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:opacity-90 transition-all duration-200 text-sm font-medium">
+                      <Link href={window.location.href}>
+                        Post to {selectedContent?.platform}
+                      </Link>
                     </button>
                   </div>
                 </div>
