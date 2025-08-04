@@ -2,6 +2,20 @@ import React from "react";
 import { PlatformResult } from "../model";
 import { PLATFORMS } from "@/utils/constants";
 import { useRouter } from "next/navigation";
+import {
+  EmailIcon,
+  EmailShareButton,
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  ThreadsIcon,
+  ThreadsShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+} from "react-share";
+import { div } from "framer-motion/client";
+import { Tooltip } from "react-tooltip";
 
 interface IProps {
   results: PlatformResult[];
@@ -11,6 +25,82 @@ interface IProps {
 export const DisplayResults: React.FC<IProps> = ({ results, copyContent }) => {
   const router = useRouter();
 
+  const getSocials = (name: string, url: string) => {
+    switch (name) {
+      case "Twitter":
+        return {
+          name: "Twitter",
+          icon: (
+            <div data-tooltip-id="twitter-tooltip">
+              <div>
+                <TwitterShareButton title={name} url={`${url}`}>
+                  <TwitterIcon size={28} round={true} />
+                </TwitterShareButton>
+              </div>
+              <Tooltip id="twiter-tooltip" content="Post to X" />
+            </div>
+          ),
+        };
+      case "LinkedIn":
+        return {
+          name: "LinkedIn",
+          icon: (
+            <div data-tooltip-id="linkedin-tooltip">
+              <div>
+                <LinkedinShareButton url={`${url}`}>
+                  <LinkedinIcon size={28} round={true} />
+                </LinkedinShareButton>
+              </div>
+              <Tooltip id="linkedin-tooltip" content="Post to LinkedIn" />
+            </div>
+          ),
+        };
+      case "Thread":
+        return {
+          name: "Thread",
+          icon: (
+            <div data-tooltip-id="twitter-tooltip">
+              <div>
+                <ThreadsShareButton url={`${url}`}>
+                  <ThreadsIcon size={28} round={true} />
+                </ThreadsShareButton>
+              </div>
+              <Tooltip id="thread-tooltip" content="Post to Threads" />
+            </div>
+          ),
+        };
+      case "Facebook":
+        return {
+          name: "Facebook",
+          icon: (
+            <div data-tooltip-id="facebook-tooltip">
+              <div>
+                <FacebookShareButton url={`${url}`}>
+                  <FacebookIcon size={28} round={true} />
+                </FacebookShareButton>
+              </div>
+              <Tooltip id="facebook-tooltip" content="Post to Facebook" />
+            </div>
+          ),
+        };
+      case "Email":
+        return {
+          name: "Email",
+          icon: (
+            <div data-tooltip-id="mail-tooltip">
+              <div>
+                <EmailShareButton url={`mailto:${url}`}>
+                  <EmailIcon size={28} round={true} />
+                </EmailShareButton>
+              </div>
+              <Tooltip id="mail-tooltip" content="Post to E-mail" />
+            </div>
+          ),
+        };
+      default:
+        return null;
+    }
+  };
   return (
     <div className="mt-12">
       <div className="flex items-center justify-between mb-6">
@@ -52,7 +142,7 @@ export const DisplayResults: React.FC<IProps> = ({ results, copyContent }) => {
                     <button
                       onClick={() => copyContent(result.content!)}
                       className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                      title="Copy content"
+                      data-tooltip-id="copy content"
                     >
                       <svg
                         className="w-4 h-4"
@@ -68,6 +158,11 @@ export const DisplayResults: React.FC<IProps> = ({ results, copyContent }) => {
                         />
                       </svg>
                     </button>
+                    <Tooltip
+                      id="copy content"
+                      content="Copy content"
+                      className="text-sm"
+                    />
                   </div>
                 ) : (
                   <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded-full">
@@ -86,7 +181,10 @@ export const DisplayResults: React.FC<IProps> = ({ results, copyContent }) => {
                       {result.content!.split(/\s+/).length} words •{" "}
                       {result.content!.length} characters
                     </span>
-                    {result.source && <span>Source: {result.source}</span>}
+                    <div className="flex gap-4 justify-end items-center">
+                      {getSocials(result?.format, window.location.href)?.icon}
+                      {result.source && <span>Source: {result.source}</span>}
+                    </div>
                   </div>
                 </div>
               ) : (
