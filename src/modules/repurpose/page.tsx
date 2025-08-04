@@ -166,13 +166,13 @@ export const DashboardPage = () => {
           <div className="flex gap-3">
             <button
               onClick={() => router.push("/history")}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 text-sm font-medium"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 text-sm font-medium cursor-pointer"
             >
               View History
             </button>
             <button
               onClick={() => router.push("/templates/create")}
-              className="px-6 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-all duration-200 text-sm font-medium shadow-lg"
+              className="px-6 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-all duration-200 text-sm font-medium shadow-lg cursor-pointer"
             >
               + Create Template
             </button>

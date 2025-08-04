@@ -37,7 +37,7 @@ export const DisplayResults: React.FC<IProps> = ({ results, copyContent }) => {
                   <TwitterIcon size={28} round={true} />
                 </TwitterShareButton>
               </div>
-              <Tooltip id="twiter-tooltip" content="Post to X" />
+              <Tooltip id="twitter-tooltip" content="Post to X" />
             </div>
           ),
         };

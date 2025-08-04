@@ -12,8 +12,15 @@ import {
   FacebookIcon,
   WhatsappIcon,
   InstapaperIcon,
+  EmailShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  ThreadsIcon,
+  ThreadsShareButton,
+  TwitterShareButton,
 } from "react-share";
 import { toast } from "sonner";
+import { Tooltip } from "react-tooltip";
 
 // Types for the content history
 interface RepurposedContent {
@@ -178,6 +185,83 @@ export default function HistoryPage() {
   const handleCopyContent = (content: string) => {
     navigator.clipboard.writeText(content);
     toast.success("Copied");
+  };
+
+  const getSocials = (name: string, url: string) => {
+    switch (name) {
+      case "Twitter":
+        return {
+          name: "Twitter",
+          icon: (
+            <div data-tooltip-id="twitter-tooltip">
+              <div>
+                <TwitterShareButton title={name} url={`${url}`}>
+                  <TwitterIcon size={28} round={true} />
+                </TwitterShareButton>
+              </div>
+              <Tooltip id="twitter-tooltip" content="Post to X" />
+            </div>
+          ),
+        };
+      case "LinkedIn":
+        return {
+          name: "LinkedIn",
+          icon: (
+            <div data-tooltip-id="linkedin-tooltip">
+              <div>
+                <LinkedinShareButton url={`${url}`}>
+                  <LinkedinIcon size={28} round={true} />
+                </LinkedinShareButton>
+              </div>
+              <Tooltip id="linkedin-tooltip" content="Post to LinkedIn" />
+            </div>
+          ),
+        };
+      case "Thread":
+        return {
+          name: "Thread",
+          icon: (
+            <div data-tooltip-id="twitter-tooltip">
+              <div>
+                <ThreadsShareButton url={`${url}`}>
+                  <ThreadsIcon size={28} round={true} />
+                </ThreadsShareButton>
+              </div>
+              <Tooltip id="thread-tooltip" content="Post to Threads" />
+            </div>
+          ),
+        };
+      case "Facebook":
+        return {
+          name: "Facebook",
+          icon: (
+            <div data-tooltip-id="facebook-tooltip">
+              <div>
+                <FacebookShareButton url={`${url}`}>
+                  <FacebookIcon size={28} round={true} />
+                </FacebookShareButton>
+              </div>
+              <Tooltip id="facebook-tooltip" content="Post to Facebook" />
+            </div>
+          ),
+        };
+      case "Email":
+        return {
+          name: "Email",
+          icon: (
+            <div data-tooltip-id="mail-tooltip">
+              <div>
+                <EmailShareButton url={`mailto:${url}`}>
+                  <EmailIcon size={28} round={true} />
+                </EmailShareButton>
+              </div>
+              <Tooltip id="mail-tooltip" content="Post to E-mail" />
+            </div>
+          ),
+        };
+      default:
+        return null;
+    }
   };
 
   if (loading) {
@@ -489,12 +573,13 @@ export default function HistoryPage() {
                     {formatDate(content.createdAt)}
                   </div>
                   <div className="flex items-center gap-2">
+                    {getSocials(content.platform, window.location.href)?.icon}
                     <button
                       onClick={() =>
                         handleCopyContent(content.repurposedContent)
                       }
                       className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                      title="Copy content"
+                      data-tooltip-id="copy content"
                     >
                       <svg
                         className="w-4 h-4"
@@ -510,13 +595,19 @@ export default function HistoryPage() {
                         />
                       </svg>
                     </button>
+                    <Tooltip
+                      id="copy content"
+                      content="Copy content"
+                      className="text-sm"
+                    />
+
                     <button
                       onClick={() => {
                         setSelectedContent(content);
                         setShowPreview(true);
                       }}
                       className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                      title="View details"
+                      data-tooltip-id="view details"
                     >
                       <svg
                         className="w-4 h-4"
@@ -538,6 +629,11 @@ export default function HistoryPage() {
                         />
                       </svg>
                     </button>
+                    <Tooltip
+                      id="view details"
+                      content="View Details"
+                      className="text-sm"
+                    />
                   </div>
                 </div>
               </div>
